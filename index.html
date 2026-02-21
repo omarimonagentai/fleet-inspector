@@ -251,6 +251,51 @@
             border-radius: 12px;
         }
         
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .photo-item {
+            position: relative;
+            aspect-ratio: 4/3;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .photo-delete {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        .photo-count {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+        
         .camera-controls {
             display: flex;
             gap: 0.5rem;
@@ -529,7 +574,7 @@
 
         <!-- Foto -->
         <div class="section">
-            <div class="section-title">📸 Vehicle Photo (Optional)</div>
+            <div class="section-title">📸 Vehicle Photos (Optional)</div>
             
             <div id="cameraSection">
                 <div class="camera-container">
@@ -541,13 +586,11 @@
                 </div>
             </div>
             
-            <div id="previewSection" class="hidden">
-                <div class="camera-preview">
-                    <img id="photoPreview" alt="Preview">
-                </div>
-                <div class="camera-controls">
-                    <button class="btn btn-danger btn-small" onclick="retakePhoto()">🔄 Retake Photo</button>
-                </div>
+            <div id="photoGallery" class="photo-gallery"></div>
+            <div id="photoCount" class="photo-count hidden"></div>
+            
+            <div id="addMoreSection" class="hidden camera-controls">
+                <button class="btn btn-secondary" onclick="showCamera()">📷 Add Another Photo</button>
             </div>
         </div>
 
@@ -620,10 +663,10 @@
         // State
         let inspectionData = {
             city: null,
-	    inspector: '',
+	        inspector: '',
             idMode: 'manual',
             vehicleId: '',
-            photo: null,
+            photos: [],
             components: {},
             notes: '',
             timestamp: null
@@ -784,23 +827,61 @@
             canvas.height = video.videoHeight;
             context.drawImage(video, 0, 0);
             
-            inspectionData.photo = canvas.toDataURL('image/jpeg', 0.8);
+            const photoData = canvas.toDataURL('image/jpeg', 0.8);
+            inspectionData.photos.push(photoData);
             
-            document.getElementById('photoPreview').src = inspectionData.photo;
+            // Hide camera, show gallery
             document.getElementById('cameraSection').classList.add('hidden');
-            document.getElementById('previewSection').classList.remove('hidden');
+            document.getElementById('addMoreSection').classList.remove('hidden');
             
             // Stop camera
             if (videoStream) {
                 videoStream.getTracks().forEach(track => track.stop());
             }
+            
+            updatePhotoGallery();
         }
 
-        function retakePhoto() {
-            inspectionData.photo = null;
+        function showCamera() {
             document.getElementById('cameraSection').classList.remove('hidden');
-            document.getElementById('previewSection').classList.add('hidden');
+            document.getElementById('addMoreSection').classList.add('hidden');
             initializeCamera();
+        }
+
+        function updatePhotoGallery() {
+            const gallery = document.getElementById('photoGallery');
+            const countEl = document.getElementById('photoCount');
+            
+            gallery.innerHTML = '';
+            
+            inspectionData.photos.forEach((photo, index) => {
+                const item = document.createElement('div');
+                item.className = 'photo-item';
+                item.innerHTML = `
+                    <img src="${photo}" alt="Photo ${index + 1}">
+                    <button class="photo-delete" onclick="deletePhoto(${index})">×</button>
+                `;
+                gallery.appendChild(item);
+            });
+            
+            if (inspectionData.photos.length > 0) {
+                countEl.textContent = `${inspectionData.photos.length} photo(s) captured`;
+                countEl.classList.remove('hidden');
+            } else {
+                countEl.classList.add('hidden');
+            }
+        }
+
+        function deletePhoto(index) {
+            inspectionData.photos.splice(index, 1);
+            updatePhotoGallery();
+            
+            // If no photos left, show camera again
+            if (inspectionData.photos.length === 0) {
+                document.getElementById('addMoreSection').classList.add('hidden');
+                document.getElementById('cameraSection').classList.remove('hidden');
+                initializeCamera();
+            }
         }
 
         // Checklist
@@ -881,9 +962,9 @@
                 return;
             }
             
-            // Check if photo is missing and confirm
-            if (!inspectionData.photo) {
-                const confirmed = confirm('Are you sure you want to send this report without the picture of the vehicle?');
+            // Check if photos are missing and confirm
+            if (inspectionData.photos.length === 0) {
+                const confirmed = confirm('Are you sure you want to send this report without any pictures of the vehicle?');
                 if (!confirmed) {
                     return;
                 }
@@ -918,7 +999,7 @@
 
         async function sendToGoogleSheets(data) {
             // Google Apps Script Web App URL
-            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6cTb4USpUz9HXJDAJbq3KpOIDi-Lnu2zDsuLmeSXplJ-1kOOOF4sMgbMQ3C_86aZy/exec';
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXDimv05HwzjPYw7BZa7y_R4K7_TEmrB6NNt0qDblRnws4bR2kdEmyLPbrK7tUH-8k/exec';
             
             // Prepare data for Google Sheets
             const formData = {
@@ -927,7 +1008,7 @@
 		        inspector: data.inspector,
                 vehicleId: data.vehicleId,
                 idMode: data.idMode,
-                photo: data.photo || '',
+                photos: data.photos,
                 mirror: data.components.mirror,
                 seat: data.components.seat,
                 topcase: data.components.topcase,
@@ -979,8 +1060,12 @@
             });
             updateChecklistUI();
             
-            // Reset photo
-            retakePhoto();
+            // Reset photos
+            inspectionData.photos = [];
+            updatePhotoGallery();
+            document.getElementById('cameraSection').classList.remove('hidden');
+            document.getElementById('addMoreSection').classList.add('hidden');
+            initializeCamera();
             
             // Reset ID mode
             setIdMode('manual');
