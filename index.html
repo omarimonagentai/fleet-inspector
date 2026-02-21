@@ -544,13 +544,6 @@
         <p>Quick inspection from the street - v1.0 260221</p>
     </div>
     <div class="header-controls">
-        <div class="city-selector">
-            <div class="city-display" onclick="toggleCityDropdown()">
-                <span>📍</span>
-                <span id="selectedCity">Select City</span>
-            </div>
-            <div id="cityDropdown" class="city-dropdown hidden"></div>
-        </div>
         <div class="inspector-input">
             <input 
                 type="text" 
@@ -558,6 +551,13 @@
                 placeholder="👤 Inspector name"
                 autocomplete="off"
             >
+        </div>
+        <div class="city-selector">
+            <div class="city-display" onclick="toggleCityDropdown()">
+                <span>📍</span>
+                <span id="selectedCity">Select City</span>
+            </div>
+            <div id="cityDropdown" class="city-dropdown hidden"></div>
         </div>
     </div>
 </div>
