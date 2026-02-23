@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.1.4 260223</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.1.5 260223</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -554,7 +554,7 @@
     <div class="header">
     <div class="text-center py-2">
         <h1>Fleet Inspector</h1>
-        <p>Quick inspection from the street - v1.1.4 260223</p>
+        <p>Quick inspection from the street - v1.1.5 260223</p>
     </div>
     <div class="header-controls">
         <div class="inspector-input">
@@ -711,6 +711,9 @@
             'Torino',
             'València'
         ];
+
+		// Google Apps Script Web App URL
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbypmpX_k_HchOaVtdxP_YbbZzaPDkOv16qADzsVq3LW4GvTK6fglFctnLIa67Byd3eo/exec';
 
         // State
         let inspectionData = {
@@ -1225,8 +1228,7 @@
         }
 
         async function sendToGoogleSheets(data) {
-            // Google Apps Script Web App URL
-            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbypmpX_k_HchOaVtdxP_YbbZzaPDkOv16qADzsVq3LW4GvTK6fglFctnLIa67Byd3eo/exec';
+            
             
             // Prepare data for Google Sheets
             const formData = {
