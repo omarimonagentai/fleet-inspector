@@ -195,22 +195,23 @@
         
         /* Identificació */
         .id-options {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .id-option {
-            flex: 1;
-            padding: 0.75rem;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            background: var(--bg);
-            cursor: pointer;
-            text-align: center;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
+		    display: grid;
+		    grid-template-columns: repeat(3, 1fr);
+		    gap: 0.5rem;
+		    margin-bottom: 1rem;
+		}
+		
+		.id-option {
+		    padding: 0.75rem 0.5rem;
+		    border: 2px solid var(--border);
+		    border-radius: 8px;
+		    background: var(--bg);
+		    cursor: pointer;
+		    text-align: center;
+		    font-weight: 500;
+		    transition: all 0.2s;
+		    font-size: 0.875rem;
+		}
         
         .id-option:hover {
             border-color: var(--primary);
@@ -578,26 +579,36 @@
             <div class="section-title">📋 Vehicle Identification</div>
             
             <div class="id-options">
-                <div class="id-option active" data-mode="manual" onclick="setIdMode('manual')">
-                    License Plate
-                </div>
-                <div class="id-option" data-mode="qr" onclick="setIdMode('qr')">
-                    QR Code
-                </div>
-            </div>
+			    <div class="id-option active" data-mode="manual" onclick="setIdMode('manual')">
+			        License Plate
+			    </div>
+			    <div class="id-option" data-mode="qr" onclick="setIdMode('qr')">
+			        QR Code
+			    </div>
+			    <div class="id-option" data-mode="ocr" onclick="setIdMode('ocr')">
+			        OCR Scan
+			    </div>
+			</div>
             
             <div id="manualInput" class="input-group">
                 <label>License Plate / ID Number</label>
                 <input type="text" id="vehicleId" placeholder="e.g. BCN1234" autocomplete="off">
             </div>
             
-            <div id="qrSection" class="hidden">
-                <div id="qr-reader"></div>
-                <div style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-light); text-align: center;">
-                    Point the camera at the vehicle's QR code
-                </div>
-            </div>
-        </div>
+            <div id="ocrSection" class="hidden">
+			    <div class="camera-container">
+			        <video id="ocrVideo" autoplay playsinline></video>
+			        <canvas id="ocrCanvas"></canvas>
+			    </div>
+			    <img id="ocrPreview" class="hidden" style="width: 100%; border-radius: 12px; margin-bottom: 1rem;" alt="OCR Preview" />
+			    <div class="camera-controls">
+			        <button class="btn btn-primary" id="captureOcrBtn" onclick="captureOCR()">📷 Capture Plate</button>
+			    </div>
+			    <button class="btn btn-secondary hidden" id="extractOcrBtn" onclick="extractOCR()">🔍 Extract Text</button>
+			    <div style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-light); text-align: center;">
+			        Take a photo of the license plate
+			    </div>
+			</div>
 
         <!-- Foto -->
         <div class="section">
@@ -700,7 +711,9 @@
         };
 
         let videoStream = null;
-        let qrScanner = null;
+		let qrScanner = null;
+		let ocrVideoStream = null;
+		let ocrCapturedImage = null;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
@@ -784,23 +797,33 @@
 
         // ID Mode
         function setIdMode(mode) {
-            inspectionData.idMode = mode;
-            
-            document.querySelectorAll('.id-option').forEach(opt => {
-                opt.classList.remove('active');
-            });
-            document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
-            
-            if (mode === 'manual') {
-                document.getElementById('manualInput').classList.remove('hidden');
-                document.getElementById('qrSection').classList.add('hidden');
-                stopQRScanner();
-            } else {
-                document.getElementById('manualInput').classList.add('hidden');
-                document.getElementById('qrSection').classList.remove('hidden');
-                startQRScanner();
-            }
-        }
+		    inspectionData.idMode = mode;
+		    
+		    document.querySelectorAll('.id-option').forEach(opt => {
+		        opt.classList.remove('active');
+		    });
+		    document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+		    
+		    // Hide all sections
+		    document.getElementById('manualInput').classList.add('hidden');
+		    document.getElementById('qrSection').classList.add('hidden');
+		    document.getElementById('ocrSection').classList.add('hidden');
+		    
+		    // Stop all scanners/cameras
+		    stopQRScanner();
+		    stopOCRCamera();
+		    
+		    // Show relevant section
+		    if (mode === 'manual') {
+		        document.getElementById('manualInput').classList.remove('hidden');
+		    } else if (mode === 'qr') {
+		        document.getElementById('qrSection').classList.remove('hidden');
+		        startQRScanner();
+		    } else if (mode === 'ocr') {
+		        document.getElementById('ocrSection').classList.remove('hidden');
+		        startOCRCamera();
+		    }
+		}
 
         // QR Scanner
         function startQRScanner() {
@@ -829,6 +852,131 @@
                 qrScanner = null;
             }
         }
+
+		// OCR Scanner
+		function startOCRCamera() {
+		    navigator.mediaDevices.getUserMedia({
+		        video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } }
+		    })
+		    .then(stream => {
+		        ocrVideoStream = stream;
+		        const video = document.getElementById('ocrVideo');
+		        video.srcObject = stream;
+		        
+		        // Reset UI
+		        document.getElementById('ocrPreview').classList.add('hidden');
+		        document.getElementById('captureOcrBtn').classList.remove('hidden');
+		        document.getElementById('extractOcrBtn').classList.add('hidden');
+		    })
+		    .catch(err => {
+		        console.error('OCR Camera error:', err);
+		        showMessage('❌ Cannot access camera', 'error');
+		    });
+		}
+		
+		function stopOCRCamera() {
+		    if (ocrVideoStream) {
+		        ocrVideoStream.getTracks().forEach(track => track.stop());
+		        ocrVideoStream = null;
+		    }
+		}
+		
+		function captureOCR() {
+		    const video = document.getElementById('ocrVideo');
+		    const canvas = document.getElementById('ocrCanvas');
+		    const context = canvas.getContext('2d');
+		    
+		    canvas.width = video.videoWidth;
+		    canvas.height = video.videoHeight;
+		    context.drawImage(video, 0, 0);
+		    
+		    ocrCapturedImage = canvas.toDataURL('image/jpeg', 0.9);
+		    
+		    // Show preview
+		    const preview = document.getElementById('ocrPreview');
+		    preview.src = ocrCapturedImage;
+		    preview.classList.remove('hidden');
+		    
+		    // Hide video, show extract button
+		    document.getElementById('captureOcrBtn').classList.add('hidden');
+		    document.getElementById('extractOcrBtn').classList.remove('hidden');
+		    
+		    // Stop camera
+		    stopOCRCamera();
+		}
+		
+		async function extractOCR() {
+		    if (!ocrCapturedImage) return;
+		    
+		    const extractBtn = document.getElementById('extractOcrBtn');
+		    extractBtn.disabled = true;
+		    extractBtn.textContent = '🔍 Extracting...';
+		    
+		    try {
+		        // Convert base64 to blob
+		        const response = await fetch(ocrCapturedImage);
+		        const blob = await response.blob();
+		        
+		        // Prepare form data for OCR.space API
+		        const formData = new FormData();
+		        formData.append('apikey', 'K88623094288957');
+		        formData.append('file', blob, 'license_plate.jpg');
+		        formData.append('language', 'eng');
+		        formData.append('OCREngine', '2');
+		        formData.append('detectOrientation', 'true');
+		        formData.append('scale', 'true');
+		        formData.append('isOverlayRequired', 'false');
+		        
+		        // Call OCR.space API
+		        const ocrResponse = await fetch('https://api.ocr.space/parse/image', {
+		            method: 'POST',
+		            body: formData
+		        });
+		        
+		        if (!ocrResponse.ok) {
+		            throw new Error(`OCR API error: ${ocrResponse.status}`);
+		        }
+		        
+		        const data = await ocrResponse.json();
+		        
+		        if (data.IsErroredOnProcessing) {
+		            throw new Error(data.ErrorMessage?.[0] || 'OCR processing failed');
+		        }
+		        
+		        // Extract text
+		        const extractedText = data.ParsedResults
+		            ?.map(r => r.ParsedText)
+		            .join('\n')
+		            .trim();
+		        
+		        if (!extractedText) {
+		            throw new Error('No text found in image');
+		        }
+		        
+		        // Clean up the text (remove spaces, newlines, special chars)
+		        const cleanedText = extractedText
+		            .replace(/\s+/g, '')  // Remove all whitespace
+		            .replace(/[^A-Z0-9]/gi, '')  // Keep only letters and numbers
+		            .toUpperCase();
+		        
+		        // Set the license plate value
+		        document.getElementById('vehicleId').value = cleanedText;
+		        inspectionData.vehicleId = cleanedText;
+		        
+		        // Show success message
+		        showMessage(`✅ License plate detected: ${cleanedText}`, 'success');
+		        
+		        // Switch back to manual mode to show the result
+		        setIdMode('manual');
+		        
+		    } catch (error) {
+		        console.error('OCR extraction error:', error);
+		        showMessage(`❌ OCR failed: ${error.message}`, 'error');
+		    } finally {
+		        extractBtn.disabled = false;
+		        extractBtn.textContent = '🔍 Extract Text';
+		    }
+		}
 
         // Camera
         function initializeCamera() {
@@ -1026,7 +1174,7 @@
 
         async function sendToGoogleSheets(data) {
             // Google Apps Script Web App URL
-            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxJtHjv0NiC5WRBo2KtYzyPnl0KnZVFs2wGbv2_B4k7f-01dbf27F9S56G5lKwE8cX7/exec';
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw_nlPurxJl2riX0BsPRONFHmFg5JtOa-oZ8TlU-mlLNnct2jMUkvF2HtPFJrWuIxFq/exec';
             
             // Prepare data for Google Sheets
             const formData = {
