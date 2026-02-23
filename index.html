@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.1.6 260223</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.1.7 260223</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -554,7 +554,7 @@
     <div class="header">
     <div class="text-center py-2">
         <h1>Fleet Inspector</h1>
-        <p>Quick inspection from the street - v1.1.6 260223</p>
+        <p>Quick inspection from the street - v1.1.7 260223</p>
     </div>
     <div class="header-controls">
         <div class="inspector-input">
@@ -846,28 +846,34 @@
 
         // QR Scanner
         function startQRScanner() {
-		if (qrScanner) {
-			qrScanner.stop().catch(err => console.error(err));
-			qrScanner = null;
+		    if (qrScanner) {
+		        qrScanner.stop().catch(err => console.error(err));
+		        qrScanner = null;
+		    }
+		    
+		    qrScanner = new Html5Qrcode("qr-reader");
+		    
+		    qrScanner.start(
+		        { facingMode: "environment" },
+		        { fps: 10, qrbox: 250 },
+		        (decodedText) => {
+		            // Extract last 6 characters from QR code
+		            const last6 = decodedText.slice(-6);
+		            
+		            // Replace first character with 'S' and convert to uppercase
+		            const vehicleId = 'S' + last6.slice(1).toUpperCase();
+		            
+		            inspectionData.vehicleId = vehicleId;
+		            document.getElementById('vehicleId').value = vehicleId;
+		            showMessage(`✅ Vehicle identified: ${vehicleId}`, 'success');
+		            stopQRScanner();
+		            setIdMode('manual');
+		        }
+		    ).catch(err => {
+		        console.error('QR Scanner error:', err);
+		        showMessage('❌ QR Scanner failed to start', 'error');
+		    });
 		}
-		
-		qrScanner = new Html5Qrcode("qr-reader");
-		
-		qrScanner.start(
-			{ facingMode: "environment" },
-			{ fps: 10, qrbox: 250 },
-			(decodedText) => {
-				inspectionData.vehicleId = decodedText;
-				document.getElementById('vehicleId').value = decodedText;
-				showMessage(`✅ Vehicle identified: ${decodedText}`, 'success');
-				stopQRScanner();
-				setIdMode('manual');
-			}
-		).catch(err => {
-			console.error('QR Scanner error:', err);
-			showMessage('❌ QR Scanner failed to start', 'error');
-		});
-	}
 
         function stopQRScanner() {
             if (qrScanner) {
