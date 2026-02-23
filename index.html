@@ -598,7 +598,7 @@
             <div id="ocrSection" class="hidden">
 			    <div class="camera-container">
 			        <video id="ocrVideo" autoplay playsinline></video>
-			        <canvas id="ocrCanvas"></canvas>
+			        <canvas id="ocrCanvas" style="display: none;"></canvas>
 			    </div>
 			    <img id="ocrPreview" class="hidden" style="width: 100%; border-radius: 12px; margin-bottom: 1rem;" alt="OCR Preview" />
 			    <div class="camera-controls">
@@ -827,24 +827,28 @@
 
         // QR Scanner
         function startQRScanner() {
-            if (qrScanner) return;
-            
-            qrScanner = new Html5Qrcode("qr-reader");
-            
-            qrScanner.start(
-                { facingMode: "environment" },
-                { fps: 10, qrbox: 250 },
-                (decodedText) => {
-                    inspectionData.vehicleId = decodedText;
-                    showMessage(`✅ Vehicle identified: ${decodedText}`, 'success');
-                    stopQRScanner();
-                    setIdMode('manual');
-                    document.getElementById('vehicleId').value = decodedText;
-                }
-            ).catch(err => {
-                console.error('QR Scanner error:', err);
-            });
-        }
+		if (qrScanner) {
+			qrScanner.stop().catch(err => console.error(err));
+			qrScanner = null;
+		}
+		
+		qrScanner = new Html5Qrcode("qr-reader");
+		
+		qrScanner.start(
+			{ facingMode: "environment" },
+			{ fps: 10, qrbox: 250 },
+			(decodedText) => {
+				inspectionData.vehicleId = decodedText;
+				document.getElementById('vehicleId').value = decodedText;
+				showMessage(`✅ Vehicle identified: ${decodedText}`, 'success');
+				stopQRScanner();
+				setIdMode('manual');
+			}
+		).catch(err => {
+			console.error('QR Scanner error:', err);
+			showMessage('❌ QR Scanner failed to start', 'error');
+		});
+	}
 
         function stopQRScanner() {
             if (qrScanner) {
@@ -906,7 +910,13 @@
 		}
 		
 		async function extractOCR() {
-		    if (!ocrCapturedImage) return;
+		    console.log('OCR extraction started');
+		    console.log('Captured image exists:', !!ocrCapturedImage);
+		    
+		    if (!ocrCapturedImage) {
+		        showMessage('❌ No image captured', 'error');
+		        return;
+		    }
 		    
 		    const extractBtn = document.getElementById('extractOcrBtn');
 		    extractBtn.disabled = true;
@@ -916,6 +926,7 @@
 		        // Convert base64 to blob
 		        const response = await fetch(ocrCapturedImage);
 		        const blob = await response.blob();
+		        console.log('Blob created, size:', blob.size);
 		        
 		        // Prepare form data for OCR.space API
 		        const formData = new FormData();
@@ -927,17 +938,22 @@
 		        formData.append('scale', 'true');
 		        formData.append('isOverlayRequired', 'false');
 		        
+		        console.log('Sending to OCR API...');
+		        
 		        // Call OCR.space API
 		        const ocrResponse = await fetch('https://api.ocr.space/parse/image', {
 		            method: 'POST',
 		            body: formData
 		        });
 		        
+		        console.log('OCR Response status:', ocrResponse.status);
+		        
 		        if (!ocrResponse.ok) {
 		            throw new Error(`OCR API error: ${ocrResponse.status}`);
 		        }
 		        
 		        const data = await ocrResponse.json();
+		        console.log('OCR Response data:', data);
 		        
 		        if (data.IsErroredOnProcessing) {
 		            throw new Error(data.ErrorMessage?.[0] || 'OCR processing failed');
@@ -949,6 +965,8 @@
 		            .join('\n')
 		            .trim();
 		        
+		        console.log('Extracted text:', extractedText);
+		        
 		        if (!extractedText) {
 		            throw new Error('No text found in image');
 		        }
@@ -958,6 +976,8 @@
 		            .replace(/\s+/g, '')  // Remove all whitespace
 		            .replace(/[^A-Z0-9]/gi, '')  // Keep only letters and numbers
 		            .toUpperCase();
+		        
+		        console.log('Cleaned text:', cleanedText);
 		        
 		        // Set the license plate value
 		        document.getElementById('vehicleId').value = cleanedText;
