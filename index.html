@@ -591,13 +591,13 @@
 			</div>
             
             <div id="manualInput" class="input-group">
-                <label>License Plate / ID Number</label>
-                <input type="text" id="vehicleId" placeholder="e.g. BCN1234" autocomplete="off">
-            </div>
+			    <label>License Plate / ID Number</label>
+			    <input type="text" id="vehicleId" placeholder="e.g. BCN1234" autocomplete="off">
+			</div>
             
             <div id="ocrSection" class="hidden">
-			    <div class="camera-container">
-			        <video id="ocrVideo" autoplay playsinline></video>
+			    <div style="position: relative; width: 100%; aspect-ratio: 4/3; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 1rem;">
+			        <video id="ocrVideo" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
 			        <canvas id="ocrCanvas" style="display: none;"></canvas>
 			    </div>
 			    <img id="ocrPreview" class="hidden" style="width: 100%; border-radius: 12px; margin-bottom: 1rem;" alt="OCR Preview" />
@@ -611,26 +611,26 @@
 			</div>
 
         <!-- Foto -->
-        <div class="section">
-            <div class="section-title">📸 Vehicle Photos (Optional)</div>
-            
-            <div id="cameraSection">
-                <div class="camera-container">
-                    <video id="video" autoplay playsinline></video>
-                    <canvas id="canvas"></canvas>
-                </div>
-                <div class="camera-controls">
-                    <button class="btn btn-primary" onclick="capturePhoto()">📷 Take Photo</button>
-                </div>
-            </div>
-            
-            <div id="photoGallery" class="photo-gallery"></div>
-            <div id="photoCount" class="photo-count hidden"></div>
-            
-            <div id="addMoreSection" class="hidden camera-controls">
-                <button class="btn btn-secondary" onclick="showCamera()">📷 Add Another Photo</button>
-            </div>
-        </div>
+		<div class="section">
+		    <div class="section-title">📸 Vehicle Photos (Optional)</div>
+		    
+		    <div id="cameraSection">
+		        <div class="camera-container">
+		            <video id="video" autoplay playsinline></video>
+		            <canvas id="canvas"></canvas>
+		        </div>
+		        <div class="camera-controls">
+		            <button class="btn btn-primary" onclick="capturePhoto()">📷 Take Photo</button>
+		        </div>
+		    </div>
+		    
+		    <div id="photoGallery" class="photo-gallery"></div>
+		    <div id="photoCount" class="photo-count hidden"></div>
+		    
+		    <div id="addMoreSection" class="hidden camera-controls">
+		        <button class="btn btn-secondary" onclick="showCamera()">📷 Add Another Photo</button>
+		    </div>
+		</div>
 
         <!-- Checklist -->
         <div class="section">
