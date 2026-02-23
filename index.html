@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.1.7 260223</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.1.8 260223</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -148,6 +148,25 @@
     transition: border-color 0.2s;
 	height: 48px;              
     box-sizing: border-box;    
+}
+
+.inspector-input select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-family: inherit;
+    transition: border-color 0.2s;
+    height: 48px;              
+    box-sizing: border-box;
+    background: white;
+    cursor: pointer;
+}
+
+.inspector-input select:focus {
+    outline: none;
+    border-color: var(--primary);
 }
 
 .inspector-input input:focus {
@@ -554,17 +573,17 @@
     <div class="header">
     <div class="text-center py-2">
         <h1>Fleet Inspector</h1>
-        <p>Quick inspection from the street - v1.1.7 260223</p>
+        <p>Quick inspection from the street - v1.1.8 260223</p>
     </div>
     <div class="header-controls">
         <div class="inspector-input">
-            <input 
-                type="text" 
-                id="inspectorName" 
-                placeholder="👤 Inspector name"
-                autocomplete="off"
-            >
-        </div>
+		    <select 
+		        id="inspectorName" 
+		        class="inspector-select"
+		    >
+		        <option value="">👤 Select Inspector</option>
+		    </select>
+		</div>
         <div class="city-selector">
             <div class="city-display" onclick="toggleCityDropdown()">
                 <span>📍</span>
@@ -713,19 +732,20 @@
         ];
 
 		// Google Apps Script Web App URL
-            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbypmpX_k_HchOaVtdxP_YbbZzaPDkOv16qADzsVq3LW4GvTK6fglFctnLIa67Byd3eo/exec';
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxtLnFhlXf9txEGYREqXyNMWNZhj7cHGVz8NlmAkEMnbTJI-ntJuNDqYlElJeKG8dlE/exec';
 
         // State
         let inspectionData = {
-            city: null,
-	        inspector: '',
-            idMode: 'manual',
-            vehicleId: '',
-            photos: [],
-            components: {},
-            notes: '',
-            timestamp: null
-        };
+		    city: null,
+		    inspector: '',
+		    inspectorEmail: '',
+		    idMode: 'manual',
+		    vehicleId: '',
+		    photos: [],
+		    components: {},
+		    notes: '',
+		    timestamp: null
+		};
 
         let videoStream = null;
 		let qrScanner = null;
@@ -798,22 +818,60 @@
         }
 
         // Inspector Name
-        function initializeInspector() {
-            const savedInspector = localStorage.getItem('inspectorName');
-            if (savedInspector) {
-                document.getElementById('inspectorName').value = savedInspector;
-                inspectionData.inspector = savedInspector;
-            }
-            
-            // Save inspector name on input
-            document.getElementById('inspectorName').addEventListener('input', (e) => {
-                const name = e.target.value.trim();
-                inspectionData.inspector = name;
-                localStorage.setItem('inspectorName', name);
-				validateFormCompleteness();
-            });
-        }
-
+        async function initializeInspector() {
+		    const select = document.getElementById('inspectorName');
+		    
+		    try {
+		        // Fetch inspectors from Google Sheets
+		        const response = await fetch(SCRIPT_URL + '?action=getInspectors');
+		        const data = await response.json();
+		        
+		        if (data.status === 'success' && data.inspectors) {
+		            // Clear existing options except first one
+		            select.innerHTML = '<option value="">👤 Select Inspector</option>';
+		            
+		            // Add inspector options (already sorted alphabetically by API)
+		            data.inspectors.forEach(inspector => {
+		                const option = document.createElement('option');
+		                option.value = inspector.name;
+		                option.textContent = inspector.name;
+		                option.dataset.email = inspector.email; // Store email in data attribute
+		                select.appendChild(option);
+		            });
+		            
+		            // Load saved inspector from localStorage
+		            const savedInspector = localStorage.getItem('inspectorName');
+		            if (savedInspector) {
+		                select.value = savedInspector;
+		                inspectionData.inspector = savedInspector;
+		                
+		                // Get email for saved inspector
+		                const selectedOption = select.options[select.selectedIndex];
+		                if (selectedOption && selectedOption.dataset.email) {
+		                    inspectionData.inspectorEmail = selectedOption.dataset.email;
+		                }
+		            }
+		        }
+		    } catch (error) {
+		        console.error('Error loading inspectors:', error);
+		        showMessage('⚠️ Could not load inspector list', 'error');
+		    }
+		    
+		    // Save inspector name and email on change
+		    select.addEventListener('change', (e) => {
+		        const name = e.target.value;
+		        inspectionData.inspector = name;
+		        localStorage.setItem('inspectorName', name);
+		        
+		        // Get email from selected option
+		        const selectedOption = e.target.options[e.target.selectedIndex];
+		        if (selectedOption && selectedOption.dataset.email) {
+		            inspectionData.inspectorEmail = selectedOption.dataset.email;
+		        }
+		        
+		        validateFormCompleteness();
+		    });
+		}
         // ID Mode
         function setIdMode(mode) {
 		    inspectionData.idMode = mode;
@@ -1243,6 +1301,7 @@
                 timestamp: data.timestamp,
                 city: data.city,
 		        inspector: data.inspector,
+				inspectorEmail: data.inspectorEmail,
                 vehicleId: data.vehicleId,
                 idMode: data.idMode,
                 photos: data.photos,
