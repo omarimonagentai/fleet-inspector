@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.1.15 260223</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.1.16 260223</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -573,7 +573,7 @@
     <div class="header">
     <div class="text-center py-2">
         <h1>Fleet Inspector</h1>
-        <p>Quick inspection from the street - v1.1.15 260223</p>
+        <p>Quick inspection from the street - v1.1.16 260223</p>
     </div>
     <div class="header-controls">
         <div class="inspector-input">
@@ -977,7 +977,7 @@
 		    canvas.height = video.videoHeight;
 		    context.drawImage(video, 0, 0);
 		    
-		    ocrCapturedImage = canvas.toDataURL('image/jpeg', 0.9);
+		    ocrCapturedImage = canvas.toDataURL('image/jpeg', 0.7);
 		    
 		    // Show preview
 		    const preview = document.getElementById('ocrPreview');
@@ -1114,28 +1114,55 @@
         }
 
         function capturePhoto() {
-            const video = document.getElementById('video');
-            const canvas = document.getElementById('canvas');
-            const context = canvas.getContext('2d');
-            
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0);
-            
-            const photoData = canvas.toDataURL('image/jpeg', 0.8);
-            inspectionData.photos.push(photoData);
-            
-            // Hide camera, show gallery
-            document.getElementById('cameraSection').classList.add('hidden');
-            document.getElementById('addMoreSection').classList.remove('hidden');
-            
-            // Stop camera
-            if (videoStream) {
-                videoStream.getTracks().forEach(track => track.stop());
-            }
-            
-            updatePhotoGallery();
-        }
+		    const video = document.getElementById('video');
+		    const canvas = document.getElementById('canvas');
+		    const context = canvas.getContext('2d');
+		    
+		    // Set smaller resolution to reduce file size
+		    const maxWidth = 1200; // Reduced from full resolution
+		    const maxHeight = 900;
+		    
+		    let width = video.videoWidth;
+		    let height = video.videoHeight;
+		    
+		    // Calculate scaled dimensions
+		    if (width > height) {
+		        if (width > maxWidth) {
+		            height = Math.round(height * maxWidth / width);
+		            width = maxWidth;
+		        }
+		    } else {
+		        if (height > maxHeight) {
+		            width = Math.round(width * maxHeight / height);
+		            height = maxHeight;
+		        }
+		    }
+		    
+		    canvas.width = width;
+		    canvas.height = height;
+		    context.drawImage(video, 0, 0, width, height);
+		    
+		    // Reduce quality to 0.6 (was 0.8)
+		    const photoData = canvas.toDataURL('image/jpeg', 0.6);
+		    inspectionData.photos.push(photoData);
+		    
+		    console.log('Photo captured:', {
+		        width: width,
+		        height: height,
+		        sizeKB: Math.round(photoData.length / 1024)
+		    });
+		    
+		    // Hide camera, show gallery
+		    document.getElementById('cameraSection').classList.add('hidden');
+		    document.getElementById('addMoreSection').classList.remove('hidden');
+		    
+		    // Stop camera
+		    if (videoStream) {
+		        videoStream.getTracks().forEach(track => track.stop());
+		    }
+		    
+		    updatePhotoGallery();
+		}
 
         function showCamera() {
             document.getElementById('cameraSection').classList.remove('hidden');
