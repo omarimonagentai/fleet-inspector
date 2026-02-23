@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.1.2 260223</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.1.3 260223</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -554,7 +554,7 @@
     <div class="header">
     <div class="text-center py-2">
         <h1>Fleet Inspector</h1>
-        <p>Quick inspection from the street - v1.1.2 260223</p>
+        <p>Quick inspection from the street - v1.1.3 260223</p>
     </div>
     <div class="header-controls">
         <div class="inspector-input">
@@ -610,19 +610,18 @@
 		    </div>
 		    
 		    <div id="ocrSection" class="hidden">
-		        <div style="position: relative; width: 100%; aspect-ratio: 4/3; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 1rem;">
-		            <video id="ocrVideo" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
-		            <canvas id="ocrCanvas" style="display: none;"></canvas>
-		        </div>
-		        <img id="ocrPreview" class="hidden" style="width: 100%; border-radius: 12px; margin-bottom: 1rem;" alt="OCR Preview" />
-		        <div class="camera-controls">
-		            <button class="btn btn-primary" id="captureOcrBtn" onclick="captureOCR()">📷 Capture Plate</button>
-		        </div>
-		        <button class="btn btn-secondary hidden" id="extractOcrBtn" onclick="extractOCR()">🔍 Extract Text</button>
-		        <div style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-light); text-align: center;">
-		            Take a photo of the license plate
-		        </div>
-		    </div>
+			    <div style="position: relative; width: 100%; aspect-ratio: 4/3; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 1rem;">
+			        <video id="ocrVideo" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+			        <canvas id="ocrCanvas" style="display: none;"></canvas>
+			    </div>
+			    <img id="ocrPreview" class="hidden" style="width: 100%; border-radius: 12px; margin-bottom: 1rem;" alt="OCR Preview" />
+			    <div class="camera-controls">
+			        <button class="btn btn-primary" id="captureOcrBtn" onclick="captureOCR()">📷 Capture Plate</button>
+			    </div>
+			    <div style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-light); text-align: center;">
+			        Take a photo of the license plate
+			    </div>
+			</div>
 		</div>
 
         <!-- Foto -->
@@ -887,7 +886,6 @@
 		        // Reset UI
 		        document.getElementById('ocrPreview').classList.add('hidden');
 		        document.getElementById('captureOcrBtn').classList.remove('hidden');
-		        document.getElementById('extractOcrBtn').classList.add('hidden');
 		    })
 		    .catch(err => {
 		        console.error('OCR Camera error:', err);
@@ -902,7 +900,7 @@
 		    }
 		}
 		
-		function captureOCR() {
+		async function captureOCR() {
 		    const video = document.getElementById('ocrVideo');
 		    const canvas = document.getElementById('ocrCanvas');
 		    const context = canvas.getContext('2d');
@@ -918,12 +916,17 @@
 		    preview.src = ocrCapturedImage;
 		    preview.classList.remove('hidden');
 		    
-		    // Hide video, show extract button
+		    // Hide capture button and video
 		    document.getElementById('captureOcrBtn').classList.add('hidden');
-		    document.getElementById('extractOcrBtn').classList.remove('hidden');
 		    
 		    // Stop camera
 		    stopOCRCamera();
+		    
+		    // Show extracting message
+		    showMessage('🔍 Extracting license plate...', 'success');
+		    
+		    // Auto-extract immediately
+		    await extractOCR();
 		}
 		
 		async function extractOCR() {
@@ -934,10 +937,6 @@
 		        showMessage('❌ No image captured', 'error');
 		        return;
 		    }
-		    
-		    const extractBtn = document.getElementById('extractOcrBtn');
-		    extractBtn.disabled = true;
-		    extractBtn.textContent = '🔍 Extracting...';
 		    
 		    try {
 		        // Convert base64 to blob
@@ -1009,9 +1008,6 @@
 		    } catch (error) {
 		        console.error('OCR extraction error:', error);
 		        showMessage(`❌ OCR failed: ${error.message}`, 'error');
-		    } finally {
-		        extractBtn.disabled = false;
-		        extractBtn.textContent = '🔍 Extract Text';
 		    }
 		}
 
