@@ -484,6 +484,12 @@
             font-size: 1.1rem;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
         }
+
+		.submit-section .btn:disabled {
+		    background: #cbd5e1;
+		    cursor: not-allowed;
+		    opacity: 0.6;
+		}
         
         .hidden {
             display: none !important;
@@ -576,39 +582,48 @@
 
         <!-- Identificació -->
         <div class="section">
-            <div class="section-title">📋 Vehicle Identification</div>
-            
-            <div class="id-options">
-			    <div class="id-option active" data-mode="manual" onclick="setIdMode('manual')">
-			        License Plate
-			    </div>
-			    <div class="id-option" data-mode="qr" onclick="setIdMode('qr')">
-			        QR Code
-			    </div>
-			    <div class="id-option" data-mode="ocr" onclick="setIdMode('ocr')">
-			        OCR Scan
-			    </div>
-			</div>
-            
-            <div id="manualInput" class="input-group">
-			    <label>License Plate / ID Number</label>
-			    <input type="text" id="vehicleId" placeholder="e.g. BCN1234" autocomplete="off">
-			</div>
-            
-            <div id="ocrSection" class="hidden">
-			    <div style="position: relative; width: 100%; aspect-ratio: 4/3; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 1rem;">
-			        <video id="ocrVideo" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
-			        <canvas id="ocrCanvas" style="display: none;"></canvas>
-			    </div>
-			    <img id="ocrPreview" class="hidden" style="width: 100%; border-radius: 12px; margin-bottom: 1rem;" alt="OCR Preview" />
-			    <div class="camera-controls">
-			        <button class="btn btn-primary" id="captureOcrBtn" onclick="captureOCR()">📷 Capture Plate</button>
-			    </div>
-			    <button class="btn btn-secondary hidden" id="extractOcrBtn" onclick="extractOCR()">🔍 Extract Text</button>
-			    <div style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-light); text-align: center;">
-			        Take a photo of the license plate
-			    </div>
-			</div>
+			
+    <div class="section-title">📋 Vehicle Identification</div>
+    
+		    <div class="id-options">
+		        <div class="id-option active" data-mode="manual" onclick="setIdMode('manual')">
+		            License Plate
+		        </div>
+		        <div class="id-option" data-mode="qr" onclick="setIdMode('qr')">
+		            QR Code
+		        </div>
+		        <div class="id-option" data-mode="ocr" onclick="setIdMode('ocr')">
+		            OCR Scan
+		        </div>
+		    </div>
+		    
+		    <div id="manualInput" class="input-group">
+		        <label>License Plate / ID Number</label>
+		        <input type="text" id="vehicleId" placeholder="e.g. BCN1234" autocomplete="off">
+		    </div>
+		    
+		    <div id="qrSection" class="hidden">
+		        <div id="qr-reader"></div>
+		        <div style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-light); text-align: center;">
+		            Point the camera at the vehicle's QR code
+		        </div>
+		    </div>
+		    
+		    <div id="ocrSection" class="hidden">
+		        <div style="position: relative; width: 100%; aspect-ratio: 4/3; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 1rem;">
+		            <video id="ocrVideo" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+		            <canvas id="ocrCanvas" style="display: none;"></canvas>
+		        </div>
+		        <img id="ocrPreview" class="hidden" style="width: 100%; border-radius: 12px; margin-bottom: 1rem;" alt="OCR Preview" />
+		        <div class="camera-controls">
+		            <button class="btn btn-primary" id="captureOcrBtn" onclick="captureOCR()">📷 Capture Plate</button>
+		        </div>
+		        <button class="btn btn-secondary hidden" id="extractOcrBtn" onclick="extractOCR()">🔍 Extract Text</button>
+		        <div style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-light); text-align: center;">
+		            Take a photo of the license plate
+		        </div>
+		    </div>
+		</div>
 
         <!-- Foto -->
 		<div class="section">
@@ -647,10 +662,10 @@
 
     <!-- Submit Button -->
     <div class="submit-section">
-        <button class="btn btn-primary" onclick="submitInspection()">
-            📤 Submit Inspection
-        </button>
-    </div>
+	    <button class="btn btn-primary" id="submitBtn" onclick="submitInspection()" disabled>
+	        📤 Submit Inspection
+	    </button>
+	</div>
 
     <!-- Loading -->
     <div id="loading" class="loading hidden">
@@ -777,6 +792,7 @@
             
             // Close dropdown
             document.getElementById('cityDropdown').classList.add('hidden');
+			validateFormCompleteness(); 
         }
 
         // Inspector Name
@@ -792,6 +808,7 @@
                 const name = e.target.value.trim();
                 inspectionData.inspector = name;
                 localStorage.setItem('inspectorName', name);
+				validateFormCompleteness();
             });
         }
 
@@ -1124,6 +1141,7 @@
                     buttons[1].classList.add('active-no');
                 }
             });
+			validateFormCompleteness();
         }
 
         // Submit
@@ -1298,9 +1316,32 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+		// Check if form is ready to submit
+		function validateFormCompleteness() {
+			const submitBtn = document.getElementById('submitBtn');
+			
+			// Check all required fields
+			const hasCity = !!inspectionData.city;
+			const hasInspector = !!inspectionData.inspector;
+			const hasVehicleId = !!document.getElementById('vehicleId').value.trim();
+			
+			// Check all components are checked
+			const allComponentsChecked = components.every(comp => 
+				inspectionData.components[comp.id] !== null
+			);
+			
+			// Enable button only if all conditions met
+			if (hasCity && hasInspector && hasVehicleId && allComponentsChecked) {
+				submitBtn.disabled = false;
+			} else {
+				submitBtn.disabled = true;
+			}
+		}
+
         // Save vehicle ID on input change
         document.getElementById('vehicleId').addEventListener('input', (e) => {
             inspectionData.vehicleId = e.target.value.trim();
+			validateFormCompleteness();
         });
     </script>
 </body>
