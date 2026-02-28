@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - v1.2.50 260228</title>
+    <title>Fleet Inspector - v1.2.51 260228</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -523,7 +523,7 @@
 <body>
     <div class="header">
             <h1>Fleet Inspector</h1>
-            <p>v1.2.50 260228</p>
+            <p>v1.2.51 260228</p>
     </div>
 
 	<!-- Sticky Vehicle ID Bar -->
@@ -1398,12 +1398,8 @@
 				try {
 				    response = await fetch(SCRIPT_URL, {
 					    method: 'POST',
-					    headers: {
-					        'Content-Type': 'text/plain;charset=utf-8'
-					    },
 					    body: JSON.stringify(formData),
-					    redirect: 'follow',
-					    mode: 'no-cors'
+					    redirect: 'follow'
 					});
 		        } catch (fetchErr) {
 					
@@ -1416,8 +1412,19 @@
 		            throw new Error('ERR_NETWORK');
 		        }
 		
-				// With no-cors mode, we can't read the response body
-				// If fetch didn't throw, we assume success
+				const text = await response.text();
+				let result;
+				try {
+				    result = JSON.parse(text);
+				} catch (parseErr) {
+				    // If we can't parse, assume success if no error thrown
+				    return;
+				}
+				if (result.status === 'error') {
+				    const code = result.errorCode || 'ERR_UNKNOWN';
+				    showMessage('❌ ' + getErrorMessage(code, result.message), 'error');
+				    throw new Error(code);
+				}
 		
 		    } catch (error) {
 		        console.error('Full error:', error);
