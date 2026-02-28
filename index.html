@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.38 260228</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.39 260228</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -204,11 +204,6 @@
             overflow: hidden;
             margin-bottom: 1rem;
         }
-
-		// temporal
-		video {
-		    pointer-events: none;
-		}
 		
         .camera-container video {
             width: 100%;
@@ -528,7 +523,7 @@
 <body>
     <div class="header">
             <h1>Fleet Inspector</h1>
-            <p>Quick inspection from the street - v1.2.38 260228</p>
+            <p>Quick inspection from the street - v1.2.39 260228</p>
     </div>
 
 	<!-- Sticky Vehicle ID Bar -->
@@ -1294,11 +1289,10 @@
                 return;
             }
             
-            // Confirm without using native confirm (mobile safe)
+            // Confirm when there are no pictures
 			if (inspectionData.photos.length === 0) {
-			    showMessage('⚠️ No photos attached. Tap Submit again to confirm.', 'error');
-			    inspectionData.photos = ['__CONFIRM__'];
-			    return;
+			    const confirmed = confirm('Are you sure you want to send this report without any pictures of the vehicle?');
+			    if (!confirmed) return;
 			}
             
             inspectionData.timestamp = new Date().toISOString();
@@ -1308,11 +1302,6 @@
             document.getElementById('submitBtn').disabled = true;
             
             try {
-				
-				// Remove confirm marker if present
-				if (inspectionData.photos[0] === '__CONFIRM__') {
-				    inspectionData.photos = [];
-				}
                 await sendToGoogleSheets(inspectionData);
                 showMessage('✅ Inspection submitted successfully!', 'success');
                 
