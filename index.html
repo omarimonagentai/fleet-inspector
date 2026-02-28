@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.2 260228</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.3 260228</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -42,137 +42,14 @@
         }
         
         .header {
-    background: var(--card);
-    padding: 1rem;
-    box-shadow: var(--shadow);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    border-bottom: 3px solid var(--primary);
-}
-
-.header h1 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    margin: 0;
-}
-
-.header p {
-    font-size: 0.875rem;
-    color: var(--text-light);
-    margin-top: 0.25rem;
-    text-align: center;
-}
-
-.header-controls {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.75rem;
-	align-items: stretch;
-}
-
-.city-selector {
-    position: relative;
-    flex: 1;
-}
-
-.city-display {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem;
-    background: var(--bg);
-    border: 2px solid var(--border);
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: all 0.2s;
-    width: 100%;
-	height: 48px;          
-    box-sizing: border-box;
-}
-
-.city-display:hover {
-    border-color: var(--primary);
-}
-
-.city-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    margin-top: 0.5rem;
-    background: var(--card);
-    border: 2px solid var(--border);
-    border-radius: 8px;
-    box-shadow: var(--shadow-lg);
-    max-height: 300px;
-    overflow-y: auto;
-    min-width: 100%;
-    z-index: 1000;
-}
-
-.city-option {
-    padding: 0.75rem 1rem;
-    cursor: pointer;
-    transition: background 0.2s;
-    font-size: 0.875rem;
-}
-
-.city-option:hover {
-    background: var(--bg);
-}
-
-.city-option.selected {
-    background: var(--primary);
-    color: white;
-    font-weight: 600;
-}
-
-.inspector-input {
-    flex: 1;
-}
-
-.inspector-input input {
-    width: 100%;
-    padding: 0.75rem;
-    border: 2px solid var(--border);
-    border-radius: 8px;
-    font-size: 0.875rem;
-    font-family: inherit;
-    transition: border-color 0.2s;
-	height: 48px;              
-    box-sizing: border-box;    
-}
-
-.inspector-input select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 2px solid var(--border);
-    border-radius: 8px;
-    font-size: 0.875rem;
-    font-family: inherit;
-    transition: border-color 0.2s;
-    height: 48px;              
-    box-sizing: border-box;
-    background: white;
-    cursor: pointer;
-}
-
-.inspector-input select:focus {
-    outline: none;
-    border-color: var(--primary);
-}
-
-.inspector-input input:focus {
-    outline: none;
-    border-color: var(--primary);
-}
+            background: var(--card);
+            padding: 1rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 3px solid var(--primary);
+        }
 
         .header h1 {
             font-size: 1.25rem;
@@ -180,13 +57,104 @@
             color: var(--primary);
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 0.5rem;
+            margin: 0;
         }
-        
+
         .header p {
             font-size: 0.875rem;
             color: var(--text-light);
             margin-top: 0.25rem;
+            text-align: center;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            align-items: stretch;
+        }
+
+        .city-selector {
+            position: relative;
+            flex: 1;
+        }
+
+        .city-display {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            width: 100%;
+            height: 48px;          
+            box-sizing: border-box;
+        }
+
+        .city-display:hover {
+            border-color: var(--primary);
+        }
+
+        .city-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 0.5rem;
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            max-height: 300px;
+            overflow-y: auto;
+            min-width: 100%;
+            z-index: 1000;
+        }
+
+        .city-option {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0.875rem;
+        }
+
+        .city-option:hover {
+            background: var(--bg);
+        }
+
+        .city-option.selected {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .inspector-input {
+            flex: 1;
+        }
+
+        .inspector-input select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+            height: 48px;              
+            box-sizing: border-box;
+            background: white;
+            cursor: pointer;
+        }
+
+        .inspector-input select:focus {
+            outline: none;
+            border-color: var(--primary);
         }
         
         .container {
@@ -214,23 +182,23 @@
         
         /* Identificació */
         .id-options {
-		    display: grid;
-		    grid-template-columns: repeat(3, 1fr);
-		    gap: 0.5rem;
-		    margin-bottom: 1rem;
-		}
-		
-		.id-option {
-		    padding: 0.75rem 0.5rem;
-		    border: 2px solid var(--border);
-		    border-radius: 8px;
-		    background: var(--bg);
-		    cursor: pointer;
-		    text-align: center;
-		    font-weight: 500;
-		    transition: all 0.2s;
-		    font-size: 0.875rem;
-		}
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .id-option {
+            padding: 0.75rem 0.5rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            cursor: pointer;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
         
         .id-option:hover {
             border-color: var(--primary);
@@ -288,15 +256,6 @@
         
         #canvas {
             display: none;
-        }
-        
-        .camera-preview {
-            position: relative;
-        }
-        
-        .camera-preview img {
-            width: 100%;
-            border-radius: 12px;
         }
         
         .photo-gallery {
@@ -381,16 +340,6 @@
             border-color: var(--primary);
         }
         
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-        
-        .btn-small {
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-        }
-        
         /* Checklist */
         .checklist {
             display: grid;
@@ -398,29 +347,27 @@
         }
         
         .check-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
             padding: 1rem;
             background: var(--bg);
             border-radius: 8px;
             border: 2px solid var(--border);
-            cursor: pointer;
             transition: all 0.2s;
-        }
-        
-        .check-item:hover {
-            border-color: var(--primary);
         }
         
         .check-item.checked {
             border-color: var(--success);
-            background: rgba(16, 185, 129, 0.1);
+            background: rgba(16, 185, 129, 0.05);
         }
         
         .check-item.unchecked {
             border-color: var(--danger);
-            background: rgba(239, 68, 68, 0.1);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .check-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         
         .check-label {
@@ -428,10 +375,11 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            font-size: 16px;
         }
         
         .check-icon {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
         }
         
         .check-status {
@@ -440,8 +388,8 @@
         }
         
         .status-btn {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             border-radius: 8px;
             border: 2px solid var(--border);
             background: white;
@@ -451,6 +399,11 @@
             justify-content: center;
             font-size: 1.25rem;
             transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .status-btn:active {
+            transform: scale(0.95);
         }
         
         .status-btn.active-ok {
@@ -465,50 +418,55 @@
             color: white;
         }
 
-		/* Tags */
-		.tags-container {
-		    margin-top: 0.75rem;
-		    padding: 0.75rem;
-		    background: white;
-		    border-radius: 8px;
-		    border: 2px solid var(--danger);
-		}
-		
-		.tags-title {
-		    font-size: 0.875rem;
-		    font-weight: 600;
-		    color: var(--danger);
-		    margin-bottom: 0.5rem;
-		}
-		
-		.tag-option {
-		    display: flex;
-		    align-items: center;
-		    padding: 0.5rem;
-		    margin-bottom: 0.25rem;
-		    cursor: pointer;
-		    border-radius: 4px;
-		    transition: background 0.2s;
-		}
-		
-		.tag-option:hover {
-		    background: var(--bg);
-		}
-		
-		.tag-option input[type="checkbox"] {
-		    width: 18px;
-		    height: 18px;
-		    margin-right: 0.5rem;
-		    cursor: pointer;
-		}
-		
-		.tag-option label {
-		    flex: 1;
-		    cursor: pointer;
-		    font-size: 0.875rem;
-		    margin: 0;
-		}
-		
+        /* Tags Container - Pill Style */
+        .tags-container {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .tags-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--danger);
+            margin-bottom: 12px;
+        }
+
+        .tags-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        /* Tag Pill */
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 12px 16px;
+            border-radius: 22px;
+            border: 2px solid var(--border);
+            background: white;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            text-align: center;
+        }
+
+        .tag-pill:active {
+            transform: scale(0.95);
+        }
+
+        .tag-pill.selected {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: white;
+        }
         
         /* Notes */
         textarea {
@@ -549,11 +507,11 @@
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
         }
 
-		.submit-section .btn:disabled {
-		    background: #cbd5e1;
-		    cursor: not-allowed;
-		    opacity: 0.6;
-		}
+        .submit-section .btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
         
         .hidden {
             display: none !important;
@@ -616,28 +574,25 @@
 </head>
 <body>
     <div class="header">
-    <div class="text-center py-2">
-        <h1>Fleet Inspector</h1>
-        <p>Quick inspection from the street - v1.2.2 260228</p>
-    </div>
-    <div class="header-controls">
-        <div class="inspector-input">
-		    <select 
-		        id="inspectorName" 
-		        class="inspector-select"
-		    >
-		        <option value="">👤 Select Inspector</option>
-		    </select>
-		</div>
-        <div class="city-selector">
-            <div class="city-display" onclick="toggleCityDropdown()">
-                <span>📍</span>
-                <span id="selectedCity">Select City</span>
+        <div class="text-center py-2">
+            <h1>Fleet Inspector</h1>
+            <p>Quick inspection from the street - v1.2.3 260228</p>
+        </div>
+        <div class="header-controls">
+            <div class="inspector-input">
+                <select id="inspectorName" class="inspector-select">
+                    <option value="">👤 Select Inspector</option>
+                </select>
             </div>
-            <div id="cityDropdown" class="city-dropdown hidden"></div>
+            <div class="city-selector">
+                <div class="city-display" onclick="toggleCityDropdown()">
+                    <span>📍</span>
+                    <span id="selectedCity">Select City</span>
+                </div>
+                <div id="cityDropdown" class="city-dropdown hidden"></div>
+            </div>
         </div>
     </div>
-</div>
 
     <div class="container">
         <!-- Messages -->
@@ -646,69 +601,68 @@
 
         <!-- Identificació -->
         <div class="section">
-			
-    <div class="section-title">📋 Vehicle Identification</div>
-    
-		    <div class="id-options">
-		        <div class="id-option active" data-mode="manual" onclick="setIdMode('manual')">
-		            License Plate
-		        </div>
-		        <div class="id-option" data-mode="qr" onclick="setIdMode('qr')">
-		            QR Code
-		        </div>
-		        <div class="id-option" data-mode="ocr" onclick="setIdMode('ocr')">
-		            OCR Scan
-		        </div>
-		    </div>
-		    
-		    <div id="manualInput" class="input-group">
-		        <label>License Plate / ID Number</label>
-		        <input type="text" id="vehicleId" placeholder="e.g. BCN1234" autocomplete="off">
-		    </div>
-		    
-		    <div id="qrSection" class="hidden">
-		        <div id="qr-reader"></div>
-		        <div style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-light); text-align: center;">
-		            Point the camera at the vehicle's QR code
-		        </div>
-		    </div>
-		    
-		    <div id="ocrSection" class="hidden">
-			    <div style="position: relative; width: 100%; aspect-ratio: 4/3; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 1rem;">
-			        <video id="ocrVideo" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
-			        <canvas id="ocrCanvas" style="display: none;"></canvas>
-			    </div>
-			    <img id="ocrPreview" class="hidden" style="width: 100%; border-radius: 12px; margin-bottom: 1rem;" alt="OCR Preview" />
-			    <div class="camera-controls">
-			        <button class="btn btn-primary" id="captureOcrBtn" onclick="captureOCR()">📷 Capture Plate</button>
-			    </div>
-			    <div style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-light); text-align: center;">
-			        Take a photo of the license plate
-			    </div>
-			</div>
-		</div>
+            <div class="section-title">📋 Vehicle Identification</div>
+            
+            <div class="id-options">
+                <div class="id-option active" data-mode="manual" onclick="setIdMode('manual')">
+                    License Plate
+                </div>
+                <div class="id-option" data-mode="qr" onclick="setIdMode('qr')">
+                    QR Code
+                </div>
+                <div class="id-option" data-mode="ocr" onclick="setIdMode('ocr')">
+                    OCR Scan
+                </div>
+            </div>
+            
+            <div id="manualInput" class="input-group">
+                <label>License Plate / ID Number</label>
+                <input type="text" id="vehicleId" placeholder="e.g. BCN1234" autocomplete="off">
+            </div>
+            
+            <div id="qrSection" class="hidden">
+                <div id="qr-reader"></div>
+                <div style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-light); text-align: center;">
+                    Point the camera at the vehicle's QR code
+                </div>
+            </div>
+            
+            <div id="ocrSection" class="hidden">
+                <div style="position: relative; width: 100%; aspect-ratio: 4/3; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 1rem;">
+                    <video id="ocrVideo" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+                    <canvas id="ocrCanvas" style="display: none;"></canvas>
+                </div>
+                <img id="ocrPreview" class="hidden" style="width: 100%; border-radius: 12px; margin-bottom: 1rem;" alt="OCR Preview" />
+                <div class="camera-controls">
+                    <button class="btn btn-primary" id="captureOcrBtn" onclick="captureOCR()">📷 Capture Plate</button>
+                </div>
+                <div style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-light); text-align: center;">
+                    Take a photo of the license plate
+                </div>
+            </div>
+        </div>
 
         <!-- Foto -->
-		<div class="section">
-		    <div class="section-title">📸 Vehicle Photos (Optional)</div>
-		    
-		    <div id="cameraSection">
-		        <div class="camera-container">
-		            <video id="video" autoplay playsinline></video>
-		            <canvas id="canvas"></canvas>
-		        </div>
-		        <div class="camera-controls">
-		            <button class="btn btn-primary" onclick="capturePhoto()">📷 Take Photo</button>
-		        </div>
-		    </div>
-		    
-		    <div id="photoGallery" class="photo-gallery"></div>
-		    <div id="photoCount" class="photo-count hidden"></div>
-		    
-		    <div id="addMoreSection" class="hidden camera-controls">
-		        <button class="btn btn-secondary" onclick="showCamera()">📷 Add Another Photo</button>
-		    </div>
-		</div>
+        <div class="section">
+            <div class="section-title">📸 Vehicle Photos (Optional)</div>
+            
+            <div id="cameraSection">
+                <div class="camera-container">
+                    <video id="video" autoplay playsinline></video>
+                    <canvas id="canvas"></canvas>
+                </div>
+                <div class="camera-controls">
+                    <button class="btn btn-primary" onclick="capturePhoto()">📷 Take Photo</button>
+                </div>
+            </div>
+            
+            <div id="photoGallery" class="photo-gallery"></div>
+            <div id="photoCount" class="photo-count hidden"></div>
+            
+            <div id="addMoreSection" class="hidden camera-controls">
+                <button class="btn btn-secondary" onclick="showCamera()">📷 Add Another Photo</button>
+            </div>
+        </div>
 
         <!-- Checklist -->
         <div class="section">
@@ -725,10 +679,10 @@
 
     <!-- Submit Button -->
     <div class="submit-section">
-	    <button class="btn btn-primary" id="submitBtn" onclick="submitInspection()" disabled>
-	        📤 Submit Inspection
-	    </button>
-	</div>
+        <button class="btn btn-primary" id="submitBtn" onclick="submitInspection()" disabled>
+            📤 Submit Inspection
+        </button>
+    </div>
 
     <!-- Loading -->
     <div id="loading" class="loading hidden">
@@ -739,81 +693,127 @@
     <script src="https://unpkg.com/html5-qrcode"></script>
 
     <script>
-        // Components checklist
+        // Components checklist with tags
         const components = [
             { 
-	       		id: 'mirror', 
-				label: 'Mirrors', 
-				icon: '🪞',
-				tags: ['Left missing', 'Right missing', 'Left not fixed properly', 'Right not fixed properly', 'Left glass broken', 'Right glass broken', 'Different models', 'Left dirty', 'Right dirty']
-		    },
-            { id: 'seat', label: 'Seat', icon: '💺' },
-            { id: 'topcase', label: 'Topcase', icon: '🧳' },
-            { id: 'wheel', label: 'Wheel', icon: '⚙️' },
-            { id: 'handlebar', label: 'Handlebar', icon: '🚴' },
-            { id: 'display', label: 'Display', icon: '⏲️' },
-            { id: 'grips', label: 'Grips', icon: '🤝' },
-			{ id: 'phoneholder', label: 'Phoneholder', icon: '📱' },
-            { id: 'lights', label: 'Lights', icon: '💡' },
-            { id: 'stickers', label: 'Stickers', icon: '🏷️' },
-            { id: 'cleanliness', label: 'Cleanliness', icon: '✨' },
-			{ id: 'helmets', label: 'Helmets', icon: '🪖' },
-            { id: 'hygiene', label: 'Hygiene Consumables', icon: '🧴' }
+                id: 'mirror', 
+                label: 'Mirrors', 
+                icon: '🪞',
+                tags: ['Left missing', 'Right missing', 'Left not fixed properly', 'Right not fixed properly', 'Left glass broken', 'Right glass broken', 'Different models', 'Left dirty', 'Right dirty']
+            },
+            { 
+                id: 'seat', 
+                label: 'Seat', 
+                icon: '💺',
+                tags: ['tag_1', 'tag_2', 'tag_3', 'tag_4']
+            },
+            { 
+                id: 'topcase', 
+                label: 'Topcase', 
+                icon: '🧳',
+                tags: ['tag_1', 'tag_2', 'tag_3', 'tag_4']
+            },
+            { 
+                id: 'wheel', 
+                label: 'Wheel', 
+                icon: '⚙️',
+                tags: ['tag_1', 'tag_2', 'tag_3', 'tag_4']
+            },
+            { 
+                id: 'handlebar', 
+                label: 'Handlebar', 
+                icon: '🚴',
+                tags: ['tag_1', 'tag_2', 'tag_3', 'tag_4']
+            },
+            { 
+                id: 'display', 
+                label: 'Display', 
+                icon: '⏲️',
+                tags: ['tag_1', 'tag_2', 'tag_3', 'tag_4']
+            },
+            { 
+                id: 'grips', 
+                label: 'Grips', 
+                icon: '🤝',
+                tags: ['tag_1', 'tag_2', 'tag_3', 'tag_4']
+            },
+            { 
+                id: 'phoneholder', 
+                label: 'Phoneholder', 
+                icon: '📱',
+                tags: ['tag_1', 'tag_2', 'tag_3', 'tag_4']
+            },
+            { 
+                id: 'lights', 
+                label: 'Lights', 
+                icon: '💡',
+                tags: ['tag_1', 'tag_2', 'tag_3', 'tag_4']
+            },
+            { 
+                id: 'stickers', 
+                label: 'Stickers', 
+                icon: '🏷️',
+                tags: ['tag_1', 'tag_2', 'tag_3', 'tag_4']
+            },
+            { 
+                id: 'cleanliness', 
+                label: 'Cleanliness', 
+                icon: '✨',
+                tags: ['tag_1', 'tag_2', 'tag_3', 'tag_4']
+            },
+            { 
+                id: 'helmets', 
+                label: 'Helmets', 
+                icon: '🪖',
+                tags: ['tag_1', 'tag_2', 'tag_3', 'tag_4']
+            },
+            { 
+                id: 'hygiene', 
+                label: 'Hygiene Consumables', 
+                icon: '🧴',
+                tags: ['tag_1', 'tag_2', 'tag_3', 'tag_4']
+            }
         ];
 
-        // Cities list (alphabetically sorted)
+        // Cities list
         const cities = [
-            'Amsterdam',
-            'Antwerp',
-            'Barcelona',
-            'Bruxelles',
-            'Delft',
-            'Den Hague',
-            'Eindhoven',
-            'Haarlem',
-            'Lisboa',
-            'Madrid',
-            'Milano',
-            'Paris',
-            'Roma',
-            'Rotterdam',
-            'Sevilla',
-            'Torino',
-            'València'
+            'Amsterdam', 'Antwerp', 'Barcelona', 'Bruxelles', 'Delft', 'Den Hague',
+            'Eindhoven', 'Haarlem', 'Lisboa', 'Madrid', 'Milano', 'Paris',
+            'Roma', 'Rotterdam', 'Sevilla', 'Torino', 'València'
         ];
 
-		// Google Apps Script Web App URL
-            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWPJobRixU7AL69TxZ-vwn4KfDOI89bQfS_qyiczRpLViNs2-z5PftPEpni-GNaV58/exec';
+        // Google Apps Script Web App URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWPJobRixU7AL69TxZ-vwn4KfDOI89bQfS_qyiczRpLViNs2-z5PftPEpni-GNaV58/exec';
 
         // State
         let inspectionData = {
-		    city: null,
-		    inspector: '',
-		    inspectorEmail: '',
-		    idMode: 'manual',
-		    vehicleId: '',
-		    photos: [],
-		    components: {},
-			componentTags: {},
-		    notes: '',
-		    timestamp: null
-		};
+            city: null,
+            inspector: '',
+            inspectorEmail: '',
+            idMode: 'manual',
+            vehicleId: '',
+            photos: [],
+            components: {},
+            componentTags: {},
+            notes: '',
+            timestamp: null
+        };
 
         let videoStream = null;
-		let qrScanner = null;
-		let ocrVideoStream = null;
-		let ocrCapturedImage = null;
+        let qrScanner = null;
+        let ocrVideoStream = null;
+        let ocrCapturedImage = null;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             initializeChecklist();
             initializeCamera();
             initializeCitySelector();
-      	    initializeInspector();
+            initializeInspector();
             
-            // Initialize all components as null (not checked yet)
             components.forEach(comp => {
                 inspectionData.components[comp.id] = null;
+                inspectionData.componentTags[comp.id] = [];
             });
         });
 
@@ -821,7 +821,6 @@
         function initializeCitySelector() {
             const dropdown = document.getElementById('cityDropdown');
             
-            // Create city options
             cities.forEach(city => {
                 const option = document.createElement('div');
                 option.className = 'city-option';
@@ -830,13 +829,11 @@
                 dropdown.appendChild(option);
             });
             
-            // Load saved city from localStorage
             const savedCity = localStorage.getItem('selectedCity');
             if (savedCity && cities.includes(savedCity)) {
                 selectCity(savedCity);
             }
             
-            // Close dropdown when clicking outside
             document.addEventListener('click', (e) => {
                 if (!e.target.closest('.city-selector')) {
                     dropdown.classList.add('hidden');
@@ -845,145 +842,124 @@
         }
 
         function toggleCityDropdown() {
-            const dropdown = document.getElementById('cityDropdown');
-            dropdown.classList.toggle('hidden');
+            document.getElementById('cityDropdown').classList.toggle('hidden');
         }
 
         function selectCity(city) {
             inspectionData.city = city;
             document.getElementById('selectedCity').textContent = city;
-            
-            // Save to localStorage
             localStorage.setItem('selectedCity', city);
             
-            // Update UI
             document.querySelectorAll('.city-option').forEach(opt => {
                 opt.classList.remove('selected');
-                if (opt.textContent === city) {
-                    opt.classList.add('selected');
-                }
+                if (opt.textContent === city) opt.classList.add('selected');
             });
             
-            // Close dropdown
             document.getElementById('cityDropdown').classList.add('hidden');
-			validateFormCompleteness(); 
+            validateFormCompleteness(); 
         }
 
-        // Inspector Name
+        // Inspector
         async function initializeInspector() {
-		    const select = document.getElementById('inspectorName');
-		    
-		    try {
-		        // Fetch inspectors from Google Sheets
-		        const response = await fetch(SCRIPT_URL + '?action=getInspectors');
-		        const data = await response.json();
-		        
-		        if (data.status === 'success' && data.inspectors) {
-		            // Clear existing options except first one
-		            select.innerHTML = '<option value="">👤 Select Inspector</option>';
-		            
-		            // Add inspector options (already sorted alphabetically by API)
-		            data.inspectors.forEach(inspector => {
-		                const option = document.createElement('option');
-		                option.value = inspector.name;
-		                option.textContent = inspector.name;
-		                option.dataset.email = inspector.email; // Store email in data attribute
-		                select.appendChild(option);
-		            });
-		            
-		            // Load saved inspector from localStorage
-		            const savedInspector = localStorage.getItem('inspectorName');
-		            if (savedInspector) {
-		                select.value = savedInspector;
-		                inspectionData.inspector = savedInspector;
-		                
-		                // Get email for saved inspector
-		                const selectedOption = select.options[select.selectedIndex];
-		                if (selectedOption && selectedOption.dataset.email) {
-		                    inspectionData.inspectorEmail = selectedOption.dataset.email;
-		                }
-		            }
-		        }
-		    } catch (error) {
-		        console.error('Error loading inspectors:', error);
-		        showMessage('⚠️ Could not load inspector list', 'error');
-		    }
-		    
-		    // Save inspector name and email on change
-		    select.addEventListener('change', (e) => {
-		        const name = e.target.value;
-		        inspectionData.inspector = name;
-		        localStorage.setItem('inspectorName', name);
-		        
-		        // Get email from selected option
-		        const selectedOption = e.target.options[e.target.selectedIndex];
-		        if (selectedOption && selectedOption.dataset.email) {
-		            inspectionData.inspectorEmail = selectedOption.dataset.email;
-		        }
-		        
-		        validateFormCompleteness();
-		    });
-		}
+            const select = document.getElementById('inspectorName');
+            
+            try {
+                const response = await fetch(SCRIPT_URL + '?action=getInspectors');
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.inspectors) {
+                    select.innerHTML = '<option value="">👤 Select Inspector</option>';
+                    
+                    data.inspectors.forEach(inspector => {
+                        const option = document.createElement('option');
+                        option.value = inspector.name;
+                        option.textContent = inspector.name;
+                        option.dataset.email = inspector.email;
+                        select.appendChild(option);
+                    });
+                    
+                    const savedInspector = localStorage.getItem('inspectorName');
+                    if (savedInspector) {
+                        select.value = savedInspector;
+                        inspectionData.inspector = savedInspector;
+                        
+                        const selectedOption = select.options[select.selectedIndex];
+                        if (selectedOption && selectedOption.dataset.email) {
+                            inspectionData.inspectorEmail = selectedOption.dataset.email;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading inspectors:', error);
+                showMessage('⚠️ Could not load inspector list', 'error');
+            }
+            
+            select.addEventListener('change', (e) => {
+                const name = e.target.value;
+                inspectionData.inspector = name;
+                localStorage.setItem('inspectorName', name);
+                
+                const selectedOption = e.target.options[e.target.selectedIndex];
+                if (selectedOption && selectedOption.dataset.email) {
+                    inspectionData.inspectorEmail = selectedOption.dataset.email;
+                }
+                
+                validateFormCompleteness();
+            });
+        }
+
         // ID Mode
         function setIdMode(mode) {
-		    inspectionData.idMode = mode;
-		    
-		    document.querySelectorAll('.id-option').forEach(opt => {
-		        opt.classList.remove('active');
-		    });
-		    document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
-		    
-		    // Hide all sections
-		    document.getElementById('manualInput').classList.add('hidden');
-		    document.getElementById('qrSection').classList.add('hidden');
-		    document.getElementById('ocrSection').classList.add('hidden');
-		    
-		    // Stop all scanners/cameras
-		    stopQRScanner();
-		    stopOCRCamera();
-		    
-		    // Show relevant section
-		    if (mode === 'manual') {
-		        document.getElementById('manualInput').classList.remove('hidden');
-		    } else if (mode === 'qr') {
-		        document.getElementById('qrSection').classList.remove('hidden');
-		        startQRScanner();
-		    } else if (mode === 'ocr') {
-		        document.getElementById('ocrSection').classList.remove('hidden');
-		        startOCRCamera();
-		    }
-		}
+            inspectionData.idMode = mode;
+            
+            document.querySelectorAll('.id-option').forEach(opt => opt.classList.remove('active'));
+            document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+            
+            document.getElementById('manualInput').classList.add('hidden');
+            document.getElementById('qrSection').classList.add('hidden');
+            document.getElementById('ocrSection').classList.add('hidden');
+            
+            stopQRScanner();
+            stopOCRCamera();
+            
+            if (mode === 'manual') {
+                document.getElementById('manualInput').classList.remove('hidden');
+            } else if (mode === 'qr') {
+                document.getElementById('qrSection').classList.remove('hidden');
+                startQRScanner();
+            } else if (mode === 'ocr') {
+                document.getElementById('ocrSection').classList.remove('hidden');
+                startOCRCamera();
+            }
+        }
 
         // QR Scanner
         function startQRScanner() {
-		    if (qrScanner) {
-		        qrScanner.stop().catch(err => console.error(err));
-		        qrScanner = null;
-		    }
-		    
-		    qrScanner = new Html5Qrcode("qr-reader");
-		    
-		    qrScanner.start(
-		        { facingMode: "environment" },
-		        { fps: 10, qrbox: 250 },
-		        (decodedText) => {
-		            // Extract last 6 characters from QR code
-		            const last6 = decodedText.slice(-6);
-		            
-		            // Replace first character with 'S' and convert to uppercase
-		            const vehicleId = 'S' + last6.slice(1).toUpperCase();
-		            
-		            inspectionData.vehicleId = vehicleId;
-		            document.getElementById('vehicleId').value = vehicleId;
-		            showMessage(`✅ Vehicle identified: ${vehicleId}`, 'success');
-		            stopQRScanner();
-		            setIdMode('manual');
-		        }
-		    ).catch(err => {
-		        console.error('QR Scanner error:', err);
-		        showMessage('❌ QR Scanner failed to start', 'error');
-		    });
-		}
+            if (qrScanner) {
+                qrScanner.stop().catch(err => console.error(err));
+                qrScanner = null;
+            }
+            
+            qrScanner = new Html5Qrcode("qr-reader");
+            
+            qrScanner.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: 250 },
+                (decodedText) => {
+                    const last6 = decodedText.slice(-6);
+                    const vehicleId = 'S' + last6.slice(1).toUpperCase();
+                    
+                    inspectionData.vehicleId = vehicleId;
+                    document.getElementById('vehicleId').value = vehicleId;
+                    showMessage(`✅ Vehicle identified: ${vehicleId}`, 'success');
+                    stopQRScanner();
+                    setIdMode('manual');
+                }
+            ).catch(err => {
+                console.error('QR Scanner error:', err);
+                showMessage('❌ QR Scanner failed to start', 'error');
+            });
+        }
 
         function stopQRScanner() {
             if (qrScanner) {
@@ -992,163 +968,114 @@
             }
         }
 
-		// OCR Scanner
-		function startOCRCamera() {
-		    navigator.mediaDevices.getUserMedia({
-		        video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } }
-		    })
-		    .then(stream => {
-		        ocrVideoStream = stream;
-		        const video = document.getElementById('ocrVideo');
-		        video.srcObject = stream;
-		        
-		        // Reset UI
-		        video.parentElement.style.display = 'block';  // Show video container again
-		        document.getElementById('ocrPreview').classList.add('hidden');
-		        document.getElementById('captureOcrBtn').classList.remove('hidden');
-		    })
-		    .catch(err => {
-		        console.error('OCR Camera error:', err);
-		        showMessage('❌ Cannot access camera', 'error');
-		    });
-		}
-		
-		function stopOCRCamera() {
-		    if (ocrVideoStream) {
-		        ocrVideoStream.getTracks().forEach(track => track.stop());
-		        ocrVideoStream = null;
-		    }
-		}
-		
-		async function captureOCR() {
-		    const video = document.getElementById('ocrVideo');
-		    const canvas = document.getElementById('ocrCanvas');
-		    const context = canvas.getContext('2d');
-		    
-		    canvas.width = video.videoWidth;
-		    canvas.height = video.videoHeight;
-		    context.drawImage(video, 0, 0);
-		    
-		    ocrCapturedImage = canvas.toDataURL('image/jpeg', 0.7);
-		    
-		    // Show preview
-		    const preview = document.getElementById('ocrPreview');
-		    preview.src = ocrCapturedImage;
-		    preview.classList.remove('hidden');
-		    
-		    // Hide the entire video container (not just the button)
-		    video.parentElement.style.display = 'none';
-		    document.getElementById('captureOcrBtn').classList.add('hidden');
-		    
-		    // Stop camera
-		    stopOCRCamera();
-		    
-		    // Show extracting message
-		    showMessage('🔍 Extracting license plate...', 'success');
-		    
-		    // Auto-extract immediately
-		    await extractOCR();
-		}
-		
-		async function extractOCR() {
-		    console.log('OCR extraction started');
-		    console.log('Captured image exists:', !!ocrCapturedImage);
-		    
-		    if (!ocrCapturedImage) {
-		        showMessage('❌ No image captured', 'error');
-		        return;
-		    }
-		    
-		    try {
-		        // Fetch OCR key from Google Sheets
-		        console.log('Fetching OCR key from Google Sheets...');
-		        const keyResponse = await fetch(SCRIPT_URL + '?action=getOcrKey');
-		        
-		        if (!keyResponse.ok) {
-		            throw new Error('Failed to fetch OCR key');
-		        }
-		        
-		        const keyData = await keyResponse.json();
-		        console.log('Key fetch response:', keyData);
-		        
-		        if (keyData.status !== 'success' || !keyData.ocrKey) {
-		            throw new Error('OCR key not found in Google Sheets');
-		        }
-		        
-		        const ocrApiKey = keyData.ocrKey;
-		        console.log('OCR key retrieved successfully');
-		        
-		        // Convert base64 to blob
-		        const response = await fetch(ocrCapturedImage);
-		        const blob = await response.blob();
-		        console.log('Blob created, size:', blob.size);
-		        
-		        // Prepare form data for OCR.space API
-		        const formData = new FormData();
-		        formData.append('apikey', ocrApiKey);  // Use key from Google Sheets
-		        formData.append('file', blob, 'license_plate.jpg');
-		        formData.append('language', 'eng');
-		        formData.append('OCREngine', '2');
-		        formData.append('detectOrientation', 'true');
-		        formData.append('scale', 'true');
-		        formData.append('isOverlayRequired', 'false');
-		        
-		        console.log('Sending to OCR API...');
-		        
-		        // Call OCR.space API
-		        const ocrResponse = await fetch('https://api.ocr.space/parse/image', {
-		            method: 'POST',
-		            body: formData
-		        });
-		        
-		        console.log('OCR Response status:', ocrResponse.status);
-		        
-		        if (!ocrResponse.ok) {
-		            throw new Error(`OCR API error: ${ocrResponse.status}`);
-		        }
-		        
-		        const data = await ocrResponse.json();
-		        console.log('OCR Response data:', data);
-		        
-		        if (data.IsErroredOnProcessing) {
-		            throw new Error(data.ErrorMessage?.[0] || 'OCR processing failed');
-		        }
-		        
-		        // Extract text
-		        const extractedText = data.ParsedResults
-		            ?.map(r => r.ParsedText)
-		            .join('\n')
-		            .trim();
-		        
-		        console.log('Extracted text:', extractedText);
-		        
-		        if (!extractedText) {
-		            throw new Error('No text found in image');
-		        }
-		        
-		        // Clean up the text (remove spaces, newlines, special chars)
-		        const cleanedText = extractedText
-		            .replace(/\s+/g, '')  // Remove all whitespace
-		            .replace(/[^A-Z0-9]/gi, '')  // Keep only letters and numbers
-		            .toUpperCase();
-		        
-		        console.log('Cleaned text:', cleanedText);
-		        
-		        // Set the license plate value
-		        document.getElementById('vehicleId').value = cleanedText;
-		        inspectionData.vehicleId = cleanedText;
-		        
-		        // Show success message
-		        showMessage(`✅ License plate detected: ${cleanedText}`, 'success');
-		        
-		        // Switch back to manual mode to show the result
-		        setIdMode('manual');
-		        
-		    } catch (error) {
-		        console.error('OCR extraction error:', error);
-		        showMessage(`❌ OCR failed: ${error.message}`, 'error');
-		    }
-		}
+        // OCR Scanner
+        function startOCRCamera() {
+            navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } }
+            })
+            .then(stream => {
+                ocrVideoStream = stream;
+                const video = document.getElementById('ocrVideo');
+                video.srcObject = stream;
+                
+                video.parentElement.style.display = 'block';
+                document.getElementById('ocrPreview').classList.add('hidden');
+                document.getElementById('captureOcrBtn').classList.remove('hidden');
+            })
+            .catch(err => {
+                console.error('OCR Camera error:', err);
+                showMessage('❌ Cannot access camera', 'error');
+            });
+        }
+
+        function stopOCRCamera() {
+            if (ocrVideoStream) {
+                ocrVideoStream.getTracks().forEach(track => track.stop());
+                ocrVideoStream = null;
+            }
+        }
+
+        async function captureOCR() {
+            const video = document.getElementById('ocrVideo');
+            const canvas = document.getElementById('ocrCanvas');
+            const context = canvas.getContext('2d');
+            
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0);
+            
+            ocrCapturedImage = canvas.toDataURL('image/jpeg', 0.7);
+            
+            const preview = document.getElementById('ocrPreview');
+            preview.src = ocrCapturedImage;
+            preview.classList.remove('hidden');
+            
+            video.parentElement.style.display = 'none';
+            document.getElementById('captureOcrBtn').classList.add('hidden');
+            
+            stopOCRCamera();
+            showMessage('🔍 Extracting license plate...', 'success');
+            
+            await extractOCR();
+        }
+
+        async function extractOCR() {
+            if (!ocrCapturedImage) {
+                showMessage('❌ No image captured', 'error');
+                return;
+            }
+            
+            try {
+                const keyResponse = await fetch(SCRIPT_URL + '?action=getOcrKey');
+                if (!keyResponse.ok) throw new Error('Failed to fetch OCR key');
+                
+                const keyData = await keyResponse.json();
+                if (keyData.status !== 'success' || !keyData.ocrKey) {
+                    throw new Error('OCR key not found');
+                }
+                
+                const response = await fetch(ocrCapturedImage);
+                const blob = await response.blob();
+                
+                const formData = new FormData();
+                formData.append('apikey', keyData.ocrKey);
+                formData.append('file', blob, 'license_plate.jpg');
+                formData.append('language', 'eng');
+                formData.append('OCREngine', '2');
+                formData.append('detectOrientation', 'true');
+                formData.append('scale', 'true');
+                
+                const ocrResponse = await fetch('https://api.ocr.space/parse/image', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!ocrResponse.ok) throw new Error(`OCR API error: ${ocrResponse.status}`);
+                
+                const data = await ocrResponse.json();
+                if (data.IsErroredOnProcessing) {
+                    throw new Error(data.ErrorMessage?.[0] || 'OCR processing failed');
+                }
+                
+                const extractedText = data.ParsedResults?.map(r => r.ParsedText).join('\n').trim();
+                if (!extractedText) throw new Error('No text found');
+                
+                const cleanedText = extractedText
+                    .replace(/\s+/g, '')
+                    .replace(/[^A-Z0-9]/gi, '')
+                    .toUpperCase();
+                
+                document.getElementById('vehicleId').value = cleanedText;
+                inspectionData.vehicleId = cleanedText;
+                
+                showMessage(`✅ License plate detected: ${cleanedText}`, 'success');
+                setIdMode('manual');
+                
+            } catch (error) {
+                console.error('OCR error:', error);
+                showMessage(`❌ OCR failed: ${error.message}`, 'error');
+            }
+        }
 
         // Camera
         function initializeCamera() {
@@ -1166,55 +1093,44 @@
         }
 
         function capturePhoto() {
-		    const video = document.getElementById('video');
-		    const canvas = document.getElementById('canvas');
-		    const context = canvas.getContext('2d');
-		    
-		    // Set smaller resolution to reduce file size
-		    const maxWidth = 1200; // Reduced from full resolution
-		    const maxHeight = 900;
-		    
-		    let width = video.videoWidth;
-		    let height = video.videoHeight;
-		    
-		    // Calculate scaled dimensions
-		    if (width > height) {
-		        if (width > maxWidth) {
-		            height = Math.round(height * maxWidth / width);
-		            width = maxWidth;
-		        }
-		    } else {
-		        if (height > maxHeight) {
-		            width = Math.round(width * maxHeight / height);
-		            height = maxHeight;
-		        }
-		    }
-		    
-		    canvas.width = width;
-		    canvas.height = height;
-		    context.drawImage(video, 0, 0, width, height);
-		    
-		    // Reduce quality to 0.6 (was 0.8)
-		    const photoData = canvas.toDataURL('image/jpeg', 0.6);
-		    inspectionData.photos.push(photoData);
-		    
-		    console.log('Photo captured:', {
-		        width: width,
-		        height: height,
-		        sizeKB: Math.round(photoData.length / 1024)
-		    });
-		    
-		    // Hide camera, show gallery
-		    document.getElementById('cameraSection').classList.add('hidden');
-		    document.getElementById('addMoreSection').classList.remove('hidden');
-		    
-		    // Stop camera
-		    if (videoStream) {
-		        videoStream.getTracks().forEach(track => track.stop());
-		    }
-		    
-		    updatePhotoGallery();
-		}
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+            
+            const maxWidth = 1200;
+            const maxHeight = 900;
+            
+            let width = video.videoWidth;
+            let height = video.videoHeight;
+            
+            if (width > height) {
+                if (width > maxWidth) {
+                    height = Math.round(height * maxWidth / width);
+                    width = maxWidth;
+                }
+            } else {
+                if (height > maxHeight) {
+                    width = Math.round(width * maxHeight / height);
+                    height = maxHeight;
+                }
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            context.drawImage(video, 0, 0, width, height);
+            
+            const photoData = canvas.toDataURL('image/jpeg', 0.6);
+            inspectionData.photos.push(photoData);
+            
+            document.getElementById('cameraSection').classList.add('hidden');
+            document.getElementById('addMoreSection').classList.remove('hidden');
+            
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+            }
+            
+            updatePhotoGallery();
+        }
 
         function showCamera() {
             document.getElementById('cameraSection').classList.remove('hidden');
@@ -1250,7 +1166,6 @@
             inspectionData.photos.splice(index, 1);
             updatePhotoGallery();
             
-            // If no photos left, show camera again
             if (inspectionData.photos.length === 0) {
                 document.getElementById('addMoreSection').classList.add('hidden');
                 document.getElementById('cameraSection').classList.remove('hidden');
@@ -1260,92 +1175,85 @@
 
         // Checklist
         function initializeChecklist() {
-		    const container = document.getElementById('checklist');
-		    
-		    components.forEach(comp => {
-		        const item = document.createElement('div');
-		        item.className = 'check-item';
-		        item.id = `check-item-${comp.id}`;
-		        item.innerHTML = `
-		            <div class="check-label">
-		                <span class="check-icon">${comp.icon}</span>
-		                <span>${comp.label}</span>
-		            </div>
-		            <div class="check-status">
-		                <button class="status-btn" onclick="setComponentStatus('${comp.id}', true)">✓</button>
-		                <button class="status-btn" onclick="setComponentStatus('${comp.id}', false)">✗</button>
-		            </div>
-		        `;
-		        container.appendChild(item);
-		        
-		        // Add tags container if component has tags
-		        if (comp.tags && comp.tags.length > 0) {
-		            const tagsContainer = document.createElement('div');
-		            tagsContainer.className = 'tags-container hidden';
-		            tagsContainer.id = `tags-${comp.id}`;
-		            
-		            let tagsHTML = `<div class="tags-title">Select issue(s):</div>`;
-		            comp.tags.forEach((tag, index) => {
-		                tagsHTML += `
-		                    <div class="tag-option">
-		                        <input 
-		                            type="checkbox" 
-		                            id="tag-${comp.id}-${index}" 
-		                            value="${tag}"
-		                            onchange="updateComponentTags('${comp.id}')"
-		                        >
-		                        <label for="tag-${comp.id}-${index}">${tag}</label>
-		                    </div>
-		                `;
-		            });
-		            
-		            tagsContainer.innerHTML = tagsHTML;
-		            item.appendChild(tagsContainer);
-		        }
-		    });
-		}
+            const container = document.getElementById('checklist');
+            
+            components.forEach(comp => {
+                const item = document.createElement('div');
+                item.className = 'check-item';
+                item.id = `check-item-${comp.id}`;
+                
+                item.innerHTML = `
+                    <div class="check-header">
+                        <div class="check-label">
+                            <span class="check-icon">${comp.icon}</span>
+                            <span>${comp.label}</span>
+                        </div>
+                        <div class="check-status">
+                            <button class="status-btn" onclick="setComponentStatus('${comp.id}', true)">✓</button>
+                            <button class="status-btn" onclick="setComponentStatus('${comp.id}', false)">✗</button>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(item);
+                
+                // Add tags container
+                if (comp.tags && comp.tags.length > 0) {
+                    const tagsContainer = document.createElement('div');
+                    tagsContainer.className = 'tags-container hidden';
+                    tagsContainer.id = `tags-${comp.id}`;
+                    
+                    let tagsHTML = `<div class="tags-title">Select issue(s):</div><div class="tags-grid">`;
+                    comp.tags.forEach((tag, index) => {
+                        tagsHTML += `<div class="tag-pill" data-component="${comp.id}" data-tag="${tag}" onclick="toggleTag(this)">${tag}</div>`;
+                    });
+                    tagsHTML += `</div>`;
+                    
+                    tagsContainer.innerHTML = tagsHTML;
+                    item.appendChild(tagsContainer);
+                }
+            });
+        }
+
+        function toggleTag(element) {
+            element.classList.toggle('selected');
+            
+            const componentId = element.dataset.component;
+            const tagValue = element.dataset.tag;
+            
+            if (!inspectionData.componentTags[componentId]) {
+                inspectionData.componentTags[componentId] = [];
+            }
+            
+            if (element.classList.contains('selected')) {
+                if (!inspectionData.componentTags[componentId].includes(tagValue)) {
+                    inspectionData.componentTags[componentId].push(tagValue);
+                }
+            } else {
+                inspectionData.componentTags[componentId] = inspectionData.componentTags[componentId].filter(t => t !== tagValue);
+            }
+            
+            console.log(`Tags for ${componentId}:`, inspectionData.componentTags[componentId]);
+        }
 
         function setComponentStatus(componentId, status) {
-		    inspectionData.components[componentId] = status;
-		    
-		    // Show/hide tags based on status
-		    const tagsContainer = document.getElementById(`tags-${componentId}`);
-		    if (tagsContainer) {
-		        if (status === false) {
-		            // Show tags when X is clicked
-		            tagsContainer.classList.remove('hidden');
-		        } else {
-		            // Hide tags and clear selections when ✓ is clicked
-		            tagsContainer.classList.add('hidden');
-		            // Uncheck all tag checkboxes
-		            const checkboxes = tagsContainer.querySelectorAll('input[type="checkbox"]');
-		            checkboxes.forEach(cb => cb.checked = false);
-		            // Clear tags from inspectionData
-		            if (inspectionData.componentTags) {
-		                inspectionData.componentTags[componentId] = [];
-		            }
-		        }
-		    }
-		    
-		    updateChecklistUI();
-		}
+            inspectionData.components[componentId] = status;
+            
+            const tagsContainer = document.getElementById(`tags-${componentId}`);
+            if (tagsContainer) {
+                if (status === false) {
+                    tagsContainer.classList.remove('hidden');
+                } else {
+                    tagsContainer.classList.add('hidden');
+                    const pills = tagsContainer.querySelectorAll('.tag-pill');
+                    pills.forEach(pill => pill.classList.remove('selected'));
+                    inspectionData.componentTags[componentId] = [];
+                }
+            }
+            
+            updateChecklistUI();
+        }
 
-		function updateComponentTags(componentId) {
-		    // Initialize componentTags if not exists
-		    if (!inspectionData.componentTags) {
-		        inspectionData.componentTags = {};
-		    }
-		    
-		    // Get all checked tags for this component
-		    const tagsContainer = document.getElementById(`tags-${componentId}`);
-		    const checkboxes = tagsContainer.querySelectorAll('input[type="checkbox"]:checked');
-		    const selectedTags = Array.from(checkboxes).map(cb => cb.value);
-		    
-		    inspectionData.componentTags[componentId] = selectedTags;
-		    
-		    console.log(`Tags for ${componentId}:`, selectedTags);
-		}
-		
         function updateChecklistUI() {
             const items = document.querySelectorAll('.check-item');
             
@@ -1365,31 +1273,28 @@
                     buttons[1].classList.add('active-no');
                 }
             });
-			validateFormCompleteness();
+            
+            validateFormCompleteness();
         }
 
         // Submit
         async function submitInspection() {
-            // Validate city
             if (!inspectionData.city) {
                 showMessage('❌ Please select a city', 'error');
                 return;
             }
             
-           // Validate inspector
             if (!inspectionData.inspector) {
-                showMessage('❌ Please enter inspector name', 'error');
+                showMessage('❌ Please select inspector', 'error');
                 return;
             }
             
-            // Validate vehicle ID
             const vehicleId = document.getElementById('vehicleId').value.trim();
             if (!vehicleId) {
-                showMessage('❌ Please enter the vehicle license plate', 'error');
+                showMessage('❌ Please enter vehicle license plate', 'error');
                 return;
             }
             
-            // Check if all components are checked
             const uncheckedComponents = components.filter(comp => 
                 inspectionData.components[comp.id] === null
             );
@@ -1399,33 +1304,21 @@
                 return;
             }
             
-            // Check if photos are missing and confirm
             if (inspectionData.photos.length === 0) {
-                const confirmed = confirm('Are you sure you want to send this report without any pictures of the vehicle?');
-                if (!confirmed) {
-                    return;
-                }
+                const confirmed = confirm('Are you sure you want to send this report without any pictures?');
+                if (!confirmed) return;
             }
             
-            // Prepare data
-            inspectionData.vehicleId = vehicleId.toUpperCase();;
+            inspectionData.vehicleId = vehicleId.toUpperCase();
             inspectionData.notes = document.getElementById('notes').value.trim();
             inspectionData.timestamp = new Date().toISOString();
             
-            // Show loading
             document.getElementById('loading').classList.remove('hidden');
             
             try {
-                // Send to Google Sheets
                 await sendToGoogleSheets(inspectionData);
-                
                 showMessage('✅ Inspection submitted successfully!', 'success');
-                
-                // Reset form after 2 seconds
-                setTimeout(() => {
-                    resetForm();
-                }, 2000);
-                
+                setTimeout(() => resetForm(), 2000);
             } catch (error) {
                 console.error('Submit error:', error);
                 showMessage('❌ Error sending. Please try again.', 'error');
@@ -1435,85 +1328,58 @@
         }
 
         async function sendToGoogleSheets(data) {
-            
-            
-            // Prepare data for Google Sheets
             const formData = {
                 timestamp: data.timestamp,
                 city: data.city,
-		        inspector: data.inspector,
-				inspectorEmail: data.inspectorEmail,
+                inspector: data.inspector,
+                inspectorEmail: data.inspectorEmail,
                 vehicleId: data.vehicleId,
                 idMode: data.idMode,
                 photos: data.photos,
-                mirror: data.components.mirror,
-				mirrorTags: data.componentTags?.mirror ? data.componentTags.mirror.join(', ') : '', 
-                seat: data.components.seat,
-                topcase: data.components.topcase,
-                wheel: data.components.wheel,
-                handlebar: data.components.handlebar,
-                display: data.components.display,
-                grips: data.components.grips,
-				phoneholder: data.components.phoneholder,
-                lights: data.components.lights,
-                stickers: data.components.stickers,
-                cleanliness: data.components.cleanliness,
-				helmets: data.components.helmets,
-				hygiene: data.components.hygiene,
                 notes: data.notes
             };
+
+            // Add all component statuses and tags
+            components.forEach(comp => {
+                formData[comp.id] = data.components[comp.id];
+                formData[`${comp.id}Tags`] = data.componentTags[comp.id] ? data.componentTags[comp.id].join(', ') : '';
+            });
             
-            // For now, just log to console and save to localStorage
             console.log('Inspection data:', formData);
             
-            // Save to localStorage as backup
             const inspections = JSON.parse(localStorage.getItem('inspections') || '[]');
             inspections.push(formData);
             localStorage.setItem('inspections', JSON.stringify(inspections));
             
-            // Uncomment this when you have your Google Apps Script URL:
-            
             const response = await fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
-            
-            /*
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-	    */
         }
 
         function resetForm() {
-            // Reset all fields except city
             document.getElementById('vehicleId').value = '';
             document.getElementById('notes').value = '';
             
-            // Reset components
             components.forEach(comp => {
                 inspectionData.components[comp.id] = null;
+                inspectionData.componentTags[comp.id] = [];
             });
+            
             updateChecklistUI();
             
-            // Reset photos
             inspectionData.photos = [];
             updatePhotoGallery();
             document.getElementById('cameraSection').classList.remove('hidden');
             document.getElementById('addMoreSection').classList.add('hidden');
             initializeCamera();
             
-            // Reset ID mode
             setIdMode('manual');
             
-            // Keep city selection from localStorage
             const savedCity = localStorage.getItem('selectedCity');
-            if (savedCity) {
-                inspectionData.city = savedCity;
-            }
+            if (savedCity) inspectionData.city = savedCity;
         }
 
         function showMessage(text, type) {
@@ -1524,53 +1390,36 @@
                 successEl.textContent = text;
                 successEl.classList.remove('hidden');
                 errorEl.classList.add('hidden');
-                
-                setTimeout(() => {
-                    successEl.classList.add('hidden');
-                }, 3000);
+                setTimeout(() => successEl.classList.add('hidden'), 3000);
             } else {
                 errorEl.textContent = text;
                 errorEl.classList.remove('hidden');
                 successEl.classList.add('hidden');
-                
-                setTimeout(() => {
-                    errorEl.classList.add('hidden');
-                }, 3000);
+                setTimeout(() => errorEl.classList.add('hidden'), 3000);
             }
             
-            // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-		// Check if form is ready to submit
-		function validateFormCompleteness() {
-			const submitBtn = document.getElementById('submitBtn');
-			
-			// Check all required fields
-			const hasCity = !!inspectionData.city;
-			const hasInspector = !!inspectionData.inspector;
-			const hasVehicleId = !!document.getElementById('vehicleId').value.trim();
-			
-			// Check all components are checked
-			const allComponentsChecked = components.every(comp => 
-				inspectionData.components[comp.id] !== null
-			);
-			
-			// Enable button only if all conditions met
-			if (hasCity && hasInspector && hasVehicleId && allComponentsChecked) {
-				submitBtn.disabled = false;
-			} else {
-				submitBtn.disabled = true;
-			}
-		}
+        function validateFormCompleteness() {
+            const submitBtn = document.getElementById('submitBtn');
+            
+            const hasCity = !!inspectionData.city;
+            const hasInspector = !!inspectionData.inspector;
+            const hasVehicleId = !!document.getElementById('vehicleId').value.trim();
+            const allComponentsChecked = components.every(comp => 
+                inspectionData.components[comp.id] !== null
+            );
+            
+            submitBtn.disabled = !(hasCity && hasInspector && hasVehicleId && allComponentsChecked);
+        }
 
-        // Save vehicle ID on input change
         document.getElementById('vehicleId').addEventListener('input', (e) => {
-		    const upperValue = e.target.value.toUpperCase();
-		    e.target.value = upperValue;  // Update the display
-		    inspectionData.vehicleId = upperValue.trim();
-		    validateFormCompleteness();
-		});
+            const upperValue = e.target.value.toUpperCase();
+            e.target.value = upperValue;
+            inspectionData.vehicleId = upperValue.trim();
+            validateFormCompleteness();
+        });
     </script>
 </body>
 </html>
