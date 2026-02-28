@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.25 280228</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.26 260228</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -488,7 +488,7 @@
 <body>
     <div class="header">
             <h1>Fleet Inspector</h1>
-            <p>Quick inspection from the street - v1.2.25 280228</p>
+            <p>Quick inspection from the street - v1.2.26 260228</p>
     </div>
 
 
@@ -603,7 +603,7 @@
 
 		<!-- Submit Button - inside container -->
 		<div class="submit-section">
-		    <button class="btn btn-primary" id="submitBtn" disabled onclick="alert('CLICK WORKS'); submitInspection();">
+		    <button class="btn btn-primary" id="submitBtn" disabled onclick="submitInspection();">
 			    📤 Submit Inspection
 			</button>
 		</div>
@@ -1228,7 +1228,6 @@
         // ============================================
         
         async function submitInspection() {
-            alert('STEP 1: submitInspection started');
             console.log('State:', JSON.stringify({
                 city: inspectionData.city,
                 inspector: inspectionData.inspector,
@@ -1237,7 +1236,7 @@
             }));
             
             // Final validation
-			alert('STEP 2: city=' + inspectionData.city + ' inspector=' + inspectionData.inspector + ' vehicle=' + inspectionData.vehicleId);
+			
             if (!inspectionData.city) {
                 showMessage('❌ Please select a city', 'error');
                 return;
@@ -1265,8 +1264,6 @@
             
             inspectionData.timestamp = new Date().toISOString();
             inspectionData.notes = document.getElementById('notes').value;
-
-			alert('STEP 3: About to send. Photos: ' + inspectionData.photos.length);
             
             document.getElementById('loading').classList.remove('hidden');
             document.getElementById('submitBtn').disabled = true;
@@ -1288,10 +1285,7 @@
             }
         }
 
-        async function sendToGoogleSheets(data) {
-		    alert('STEP 4: Inside sendToGoogleSheets');
-   			alert('STEP 4b: components=' + JSON.stringify(data.components));
-
+        async function sendToGoogleSheets(data) 
 			const formData = {
 		        timestamp: data.timestamp,
 		        city: data.city,
@@ -1328,7 +1322,6 @@
 		        hygieneTags: (data.componentTags.hygiene || []).join(', '),
 		        notes: data.notes
 		    };
-			alert('STEP 4c: formData built OK');
 		
 		    // Save to localStorage as backup
 		    const backup = { ...formData };
@@ -1342,7 +1335,6 @@
 		        console.log('Payload size:', JSON.stringify(formData).length, 'bytes');
 		        console.log('Photos:', formData.photos.length);
 
-				alert('STEP 5: About to fetch');
 		        const controller = new AbortController();
 		        const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 min timeout
 		
@@ -1358,7 +1350,7 @@
 		                signal: controller.signal
 		            });
 		        } catch (fetchErr) {
-					alert('STEP 6 ERROR: ' + fetchErr.message);
+					
 		            clearTimeout(timeoutId);
 		            if (fetchErr.name === 'AbortError') {
 		                showMessage('❌ [ERR_TIMEOUT] Request timed out. Please try again.', 'error');
