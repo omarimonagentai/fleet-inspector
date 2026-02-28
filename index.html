@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.14 280228</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.15 280228</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -364,16 +364,20 @@
         }
         
         .submit-section {
-            padding: 1rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .submit-section button {
-            width: 100%;
-            padding: 1rem;
-            font-size: 1.125rem;
-        }
+		    padding: 1rem;
+		    max-width: 600px;
+		    margin: 0 auto;
+		    position: relative;
+		    z-index: 10;
+		}
+		
+		.submit-section button {
+		    width: 100%;
+		    padding: 1rem;
+		    font-size: 1.125rem;
+		    -webkit-appearance: none;
+		    touch-action: manipulation;
+		}
         
         .hidden {
             display: none !important;
@@ -484,7 +488,7 @@
 <body>
     <div class="header">
             <h1>Fleet Inspector</h1>
-            <p>Quick inspection from the street - v1.2.14 280228</p>
+            <p>Quick inspection from the street - v1.2.15 280228</p>
     </div>
 
 
@@ -596,14 +600,14 @@
 		        </div>
 		    </div>
 		</div>
+
+		<!-- Submit Button - inside container -->
+		<div class="submit-section">
+		    <button class="btn btn-primary" id="submitBtn" disabled>
+		        📤 Submit Inspection
+		    </button>
+		</div>
 	</div>
-	
-    <!-- Submit Button -->
-    <div class="submit-section">
-        <button class="btn btn-primary" id="submitBtn" onclick="submitInspection()" disabled>
-            📤 Submit Inspection
-        </button>
-    </div>
 
     <!-- Loading -->
     <div id="loading" class="loading hidden">
@@ -1447,6 +1451,22 @@
 		    inspectionData.vehicleId = e.target.value.trim();
 		    validateFormCompleteness();
 		});
+
+		// Submit button - using addEventListener for reliable mobile tap handling
+		document.getElementById('submitBtn').addEventListener('click', (e) => {
+			e.preventDefault();
+			console.log('Submit button clicked!');
+			submitInspection();
+		});
+		
+		document.getElementById('submitBtn').addEventListener('touchend', (e) => {
+			if (!document.getElementById('submitBtn').disabled) {
+				e.preventDefault();
+				console.log('Submit button tapped!');
+				submitInspection();
+			}
+		});
+		
     </script>
 </body>
 </html>
