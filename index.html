@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.42 260228</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.43 260228</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -523,7 +523,7 @@
 <body>
     <div class="header">
             <h1>Fleet Inspector</h1>
-            <p>Quick inspection from the street - v1.2.42 260228</p>
+            <p>Quick inspection from the street - v1.2.43 260228</p>
     </div>
 
 	<!-- Sticky Vehicle ID Bar -->
@@ -1051,11 +1051,41 @@
             validateFormCompleteness();
         }
 
+		let photoStream = null;
+
+		async function startCamera() {
+		    try {
+		        const video = document.getElementById('video');
+		        photoStream = await navigator.mediaDevices.getUserMedia({
+		            video: { facingMode: 'environment' }
+		        });
+		        video.srcObject = photoStream;
+		    } catch (error) {
+		        console.error('Camera error:', error);
+		    }
+		}
+		
+		function stopCamera() {
+		    if (photoStream) {
+		        photoStream.getTracks().forEach(track => track.stop());
+		        photoStream = null;
+		    }
+		}
+		
 		function togglePhotoSection() {
 		    const chevron = document.getElementById('photoChevron');
 		    const content = document.getElementById('photoContent');
+		
+		    const isOpening = !content.classList.contains('open');
+		
 		    chevron.classList.toggle('open');
 		    content.classList.toggle('open');
+		
+		    if (isOpening) {
+		        startCamera();
+		    } else {
+		        stopCamera();
+		    }
 		}
 
         // ============================================
@@ -1301,8 +1331,7 @@
             try {
 				console.log("About to send to Google Sheets");
 				alert("Sending...");
-                //await sendToGoogleSheets(inspectionData);
-				
+                await sendToGoogleSheets(inspectionData);
                 showMessage('✅ Inspection submitted successfully!', 'success');
                 
                 setTimeout(() => {
