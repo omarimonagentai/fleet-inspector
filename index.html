@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.20 280228</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.21 280228</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -488,7 +488,7 @@
 <body>
     <div class="header">
             <h1>Fleet Inspector</h1>
-            <p>Quick inspection from the street - v1.2.20 280228</p>
+            <p>Quick inspection from the street - v1.2.21 280228</p>
     </div>
 
 
@@ -1289,7 +1289,8 @@
         }
 
         async function sendToGoogleSheets(data) {
-		    const formData = {
+		    alert('STEP 4: Inside sendToGoogleSheets');
+			const formData = {
 		        timestamp: data.timestamp,
 		        city: data.city,
 		        inspector: data.inspector,
@@ -1337,7 +1338,8 @@
 		        console.log('Sending to:', SCRIPT_URL);
 		        console.log('Payload size:', JSON.stringify(formData).length, 'bytes');
 		        console.log('Photos:', formData.photos.length);
-		
+
+				alert('STEP 5: About to fetch');
 		        const controller = new AbortController();
 		        const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 min timeout
 		
@@ -1353,6 +1355,7 @@
 		                signal: controller.signal
 		            });
 		        } catch (fetchErr) {
+					alert('STEP 6 ERROR: ' + fetchErr.message);
 		            clearTimeout(timeoutId);
 		            if (fetchErr.name === 'AbortError') {
 		                showMessage('❌ [ERR_TIMEOUT] Request timed out. Please try again.', 'error');
