@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - v1.2.48 260228</title>
+    <title>Fleet Inspector - v1.2.49 260228</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -523,7 +523,7 @@
 <body>
     <div class="header">
             <h1>Fleet Inspector</h1>
-            <p>v1.2.48 260228</p>
+            <p>v1.2.49 260228</p>
     </div>
 
 	<!-- Sticky Vehicle ID Bar -->
@@ -1315,7 +1315,8 @@
                 return;
             }
             
-            // Confirm when there are no pictures
+        
+			// Confirm when there are no pictures
 			if (inspectionData.photos.length === 0) {
 			    const confirmed = confirm('Are you sure you want to send this report without any pictures of the vehicle?');
 			    if (!confirmed) return;
@@ -1332,24 +1333,18 @@
             document.getElementById('loading').classList.remove('hidden');
             document.getElementById('submitBtn').disabled = true;
             
-            try {
-				console.log("About to send to Google Sheets");
-				alert("Sending...");
-                await sendToGoogleSheets(inspectionData);
+            // Use .then() instead of await for Safari iOS compatibility
+            sendToGoogleSheets(inspectionData).then(function() {
                 showMessage('✅ Inspection submitted successfully!', 'success');
-                
-                setTimeout(() => {
+                setTimeout(function() {
                     resetForm();
                 }, 2000);
-                
-            } catch (error) {
+            }).catch(function(error) {
                 console.error('Submit error:', error);
-                // Error message is already shown by sendToGoogleSheets
-            } finally {
+            }).finally(function() {
                 document.getElementById('loading').classList.add('hidden');
                 validateFormCompleteness();
-            }
-        }
+            });
 
         async function sendToGoogleSheets(data) {
 			const formData = {
