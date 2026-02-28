@@ -1334,6 +1334,7 @@
             document.getElementById('submitBtn').disabled = true;
             
             // Use .then() instead of await for Safari iOS compatibility
+			alert('SAFARI DEBUG: about to call sendToGoogleSheets');
             sendToGoogleSheets(inspectionData).then(function() {
                 showMessage('✅ Inspection submitted successfully!', 'success');
                 setTimeout(function() {
