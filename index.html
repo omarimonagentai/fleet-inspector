@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.43 260228</title>
+    <title>Fleet Inspector - v1.2.44 260228</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -523,7 +523,7 @@
 <body>
     <div class="header">
             <h1>Fleet Inspector</h1>
-            <p>Quick inspection from the street - v1.2.43 260228</p>
+            <p>v1.2.44 260228</p>
     </div>
 
 	<!-- Sticky Vehicle ID Bar -->
@@ -983,17 +983,6 @@
         // CAMERA - VEHICLE PHOTOS
         // ============================================
         
-        async function startCamera() {
-            try {
-                const video = document.getElementById('video');
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 960 } }
-                });
-                video.srcObject = stream;
-            } catch (error) {
-                console.error('Camera error:', error);
-            }
-        }
 
         function capturePhoto() {
             const video = document.getElementById('video');
@@ -1056,12 +1045,22 @@
 		async function startCamera() {
 		    try {
 		        const video = document.getElementById('video');
+		
+		        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+		            alert("Camera API not supported in this browser");
+		            return;
+		        }
+		
 		        photoStream = await navigator.mediaDevices.getUserMedia({
 		            video: { facingMode: 'environment' }
 		        });
+		
 		        video.srcObject = photoStream;
+		        await video.play();
+		
 		    } catch (error) {
 		        console.error('Camera error:', error);
+		        alert("Camera error: " + error.message);
 		    }
 		}
 		
@@ -1414,7 +1413,11 @@
 		            throw new Error('ERR_NETWORK');
 		        }
 		
-		       const text = await response.text();
+				calert("HTTP Status: " + response.status);
+
+				const text = await response.text();
+				
+				alert("Raw response: " + text.substring(0, 300));
 		
 		        let result;
 		        try {
