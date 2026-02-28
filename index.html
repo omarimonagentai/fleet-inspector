@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.11 260228</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.12 280228</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -276,14 +276,12 @@
         .check-btn.ok.selected {
             background: var(--success);
             border-color: var(--success);
-			color: var(--success);
             color: white;
         }
         
         .check-btn.issue.selected {
             background: var(--danger);
             border-color: var(--danger);
-			color: var(--danger);
             color: white;
         }
         
@@ -486,7 +484,7 @@
 <body>
     <div class="header">
             <h1>Fleet Inspector</h1>
-            <p>Quick inspection from the street - v1.2.11 260228</p>
+            <p>Quick inspection from the street - v1.2.12 280228</p>
     </div>
 
 
@@ -622,7 +620,7 @@
         // ============================================
         
         // Google Apps Script Web App URL
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzhQF84F62p0mEFHcWNlCwLfbhvlyFSReGjEFBaqcHB9xpSml56-HLk9dImonEju8xZ/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzJ8YVP2Rh7zRQSZdtLzdkWt8HvNwzAh6arKx0n64vq3-gA7FGRJLQxp7F2PpO1lmAn/exec';
         
         // Cities list (alphabetically sorted)
         const cities = [
@@ -647,6 +645,21 @@
             { id: 'helmets', label: 'Helmets', icon: '🪖' },
             { id: 'hygiene', label: 'Hygiene', icon: '🧴' }
         ];
+
+        // Error code descriptions for user-friendly messages
+        const ERROR_MESSAGES = {
+            'ERR_SHEET_NOT_FOUND': 'The data sheet could not be found. Contact your admin.',
+            'ERR_INVALID_JSON': 'Data format error. Please try again.',
+            'ERR_MISSING_FIELDS': 'Missing required fields. Please fill in all required information.',
+            'ERR_SHEET_WRITE': 'Could not save data to the spreadsheet. Try again or contact admin.',
+            'ERR_KEYS_SHEET': 'Configuration error. Contact your admin.',
+            'ERR_INSPECTORS_SHEET': 'Inspector list not available. Contact your admin.',
+            'ERR_TAGS_SHEET': 'Tags configuration not available. Contact your admin.',
+            'ERR_UNKNOWN': 'An unexpected error occurred. Please try again.',
+            'ERR_NETWORK': 'Network error. Check your internet connection and try again.',
+            'ERR_TIMEOUT': 'Request timed out. Please try again.',
+            'ERR_PARSE': 'Received an unexpected response from the server.'
+        };
 
         // ============================================
         // STATE
@@ -766,6 +779,10 @@
                     });
                     
                     validateFormCompleteness();
+                } else {
+                    console.error('Error loading inspectors:', result.errorCode, result.message);
+                    const select = document.getElementById('inspectorSelect');
+                    select.innerHTML = '<option value="">Error loading inspectors</option>';
                 }
             } catch (error) {
                 console.error('Error loading inspectors:', error);
@@ -777,7 +794,15 @@
         async function loadTags() {
             try {
                 const response = await fetch(SCRIPT_URL + '?action=getTags');
-                const result = await response.json();
+                const text = await response.text();
+                
+                let result;
+                try {
+                    result = JSON.parse(text);
+                } catch (parseErr) {
+                    console.error('Tags response is not valid JSON:', text.substring(0, 200));
+                    return;
+                }
                 
                 if (result.status === 'success') {
                     componentTags = result.tags;
@@ -785,6 +810,8 @@
                     
                     // Update checklist with tags
                     updateChecklistTags();
+                } else {
+                    console.error('Error loading tags:', result.errorCode, result.message);
                 }
             } catch (error) {
                 console.error('Error loading tags:', error);
@@ -1183,6 +1210,14 @@
         }
 
         // ============================================
+        // ERROR HANDLING HELPER
+        // ============================================
+        
+        function getErrorMessage(errorCode, fallbackMessage) {
+            return ERROR_MESSAGES[errorCode] || fallbackMessage || 'An unexpected error occurred.';
+        }
+
+        // ============================================
         // SUBMIT
         // ============================================
         
@@ -1229,9 +1264,10 @@
                 
             } catch (error) {
                 console.error('Submit error:', error);
-                showMessage('❌ Error submitting. Please try again.', 'error');
+                // Error message is already shown by sendToGoogleSheets
             } finally {
                 document.getElementById('loading').classList.add('hidden');
+                validateFormCompleteness();
             }
         }
 
@@ -1285,14 +1321,30 @@
 		        console.log('Payload size:', JSON.stringify(formData).length, 'bytes');
 		        console.log('Photos:', formData.photos.length);
 		
-		        const response = await fetch(SCRIPT_URL, {
-		            method: 'POST',
-		            body: JSON.stringify(formData),
-		            redirect: 'follow'
-		        });
+		        const controller = new AbortController();
+		        const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 min timeout
+		
+		        let response;
+		        try {
+		            response = await fetch(SCRIPT_URL, {
+		                method: 'POST',
+		                body: JSON.stringify(formData),
+		                redirect: 'follow',
+		                signal: controller.signal
+		            });
+		        } catch (fetchErr) {
+		            clearTimeout(timeoutId);
+		            if (fetchErr.name === 'AbortError') {
+		                showMessage('❌ [ERR_TIMEOUT] Request timed out. Please try again.', 'error');
+		                throw new Error('ERR_TIMEOUT');
+		            }
+		            showMessage('❌ [ERR_NETWORK] Network error. Check your connection.', 'error');
+		            throw new Error('ERR_NETWORK');
+		        }
+		
+		        clearTimeout(timeoutId);
 		
 		        console.log('Response status:', response.status);
-		        console.log('Response URL:', response.url);
 		
 		        const text = await response.text();
 		        console.log('Response body:', text);
@@ -1301,17 +1353,20 @@
 		        try {
 		            result = JSON.parse(text);
 		        } catch (parseErr) {
-		            throw new Error('Server returned non-JSON: ' + text.substring(0, 200));
+		            console.error('Non-JSON response:', text.substring(0, 300));
+		            showMessage('❌ [ERR_PARSE] Unexpected server response. Data may have been saved — check the spreadsheet.', 'error');
+		            throw new Error('ERR_PARSE');
 		        }
 		
 		        if (result.status === 'error') {
-		            throw new Error('Server error: ' + result.message);
+		            const code = result.errorCode || 'ERR_UNKNOWN';
+		            const userMsg = getErrorMessage(code, result.message);
+		            showMessage(`❌ [${code}] ${userMsg}`, 'error');
+		            throw new Error(code + ': ' + result.message);
 		        }
 		
 		    } catch (error) {
 		        console.error('Full error:', error);
-		        // Show the actual error to the user
-		        alert('DEBUG ERROR:\n\n' + error.message + '\n\nCheck browser console for details.');
 		        throw error;
 		    }
 		}
@@ -1367,7 +1422,7 @@
                 errorEl.textContent = text;
                 errorEl.classList.remove('hidden');
                 successEl.classList.add('hidden');
-                setTimeout(() => { errorEl.classList.add('hidden'); }, 3000);
+                setTimeout(() => { errorEl.classList.add('hidden'); }, 5000);
             }
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
