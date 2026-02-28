@@ -1334,7 +1334,7 @@
             document.getElementById('submitBtn').disabled = true;
             
             // Use .then() instead of await for Safari iOS compatibility
-			alert('SAFARI DEBUG: about to call sendToGoogleSheets');
+			//alert('SAFARI DEBUG: about to call sendToGoogleSheets');
             sendToGoogleSheets(inspectionData).then(function() {
                 showMessage('✅ Inspection submitted successfully!', 'success');
                 setTimeout(function() {
@@ -1349,7 +1349,7 @@
         }
 
         async function sendToGoogleSheets(data) {
-			alert('SAFARI DEBUG 2: inside sendToGoogleSheets');
+			//alert('SAFARI DEBUG 2: inside sendToGoogleSheets');
 			const formData = {
 		        timestamp: data.timestamp,
 		        city: data.city,
@@ -1387,7 +1387,7 @@
 		        notes: data.notes
 		    };
 
-			alert('SAFARI DEBUG 2b: formData built, photos=' + data.photos.length);
+			//alert('SAFARI DEBUG 2b: formData built, photos=' + data.photos.length);
 			
 		    // Save to localStorage as backup
 		    try {
@@ -1401,7 +1401,7 @@
 		    }
 		
 		    try {
-		    	alert('SAFARI DEBUG 3: about to fetch');
+		    	//alert('SAFARI DEBUG 3: about to fetch');
 		        let response;
 				try {
 				    response = await fetch(SCRIPT_URL, {
