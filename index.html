@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.1.20 260228</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.1 260228</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -464,6 +464,51 @@
             border-color: var(--danger);
             color: white;
         }
+
+		/* Tags */
+		.tags-container {
+		    margin-top: 0.75rem;
+		    padding: 0.75rem;
+		    background: white;
+		    border-radius: 8px;
+		    border: 2px solid var(--danger);
+		}
+		
+		.tags-title {
+		    font-size: 0.875rem;
+		    font-weight: 600;
+		    color: var(--danger);
+		    margin-bottom: 0.5rem;
+		}
+		
+		.tag-option {
+		    display: flex;
+		    align-items: center;
+		    padding: 0.5rem;
+		    margin-bottom: 0.25rem;
+		    cursor: pointer;
+		    border-radius: 4px;
+		    transition: background 0.2s;
+		}
+		
+		.tag-option:hover {
+		    background: var(--bg);
+		}
+		
+		.tag-option input[type="checkbox"] {
+		    width: 18px;
+		    height: 18px;
+		    margin-right: 0.5rem;
+		    cursor: pointer;
+		}
+		
+		.tag-option label {
+		    flex: 1;
+		    cursor: pointer;
+		    font-size: 0.875rem;
+		    margin: 0;
+		}
+		
         
         /* Notes */
         textarea {
@@ -573,7 +618,7 @@
     <div class="header">
     <div class="text-center py-2">
         <h1>Fleet Inspector</h1>
-        <p>Quick inspection from the street - v1.1.20 260228</p>
+        <p>Quick inspection from the street - v1.2.1 260228</p>
     </div>
     <div class="header-controls">
         <div class="inspector-input">
@@ -696,7 +741,12 @@
     <script>
         // Components checklist
         const components = [
-            { id: 'mirror', label: 'Mirrors', icon: '🪞' },
+            { 
+	       		id: 'mirror', 
+				label: 'Mirrors', 
+				icon: '🪞',
+				tags: ['Left missing', 'Right missing', 'Left not fixed properly', 'Right not fixed properly', 'Left glass broken', 'Right glass broken', 'Different models', 'Left dirty', 'Right dirty']
+		    },
             { id: 'seat', label: 'Seat', icon: '💺' },
             { id: 'topcase', label: 'Topcase', icon: '🧳' },
             { id: 'wheel', label: 'Wheel', icon: '⚙️' },
@@ -733,7 +783,7 @@
         ];
 
 		// Google Apps Script Web App URL
-            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzVLSeM3VizEvEtZaUVFeDLWz43i1W2nAMG7P5ycllKr8RwPG_T3cyFJQHvRwL-JJTm/exec';
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWPJobRixU7AL69TxZ-vwn4KfDOI89bQfS_qyiczRpLViNs2-z5PftPEpni-GNaV58/exec';
 
         // State
         let inspectionData = {
@@ -744,6 +794,7 @@
 		    vehicleId: '',
 		    photos: [],
 		    components: {},
+			componentTags: {},
 		    notes: '',
 		    timestamp: null
 		};
@@ -1209,30 +1260,92 @@
 
         // Checklist
         function initializeChecklist() {
-            const container = document.getElementById('checklist');
-            
-            components.forEach(comp => {
-                const item = document.createElement('div');
-                item.className = 'check-item';
-                item.innerHTML = `
-                    <div class="check-label">
-                        <span class="check-icon">${comp.icon}</span>
-                        <span>${comp.label}</span>
-                    </div>
-                    <div class="check-status">
-                        <button class="status-btn" onclick="setComponentStatus('${comp.id}', true)">✓</button>
-                        <button class="status-btn" onclick="setComponentStatus('${comp.id}', false)">✗</button>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
+		    const container = document.getElementById('checklist');
+		    
+		    components.forEach(comp => {
+		        const item = document.createElement('div');
+		        item.className = 'check-item';
+		        item.id = `check-item-${comp.id}`;
+		        item.innerHTML = `
+		            <div class="check-label">
+		                <span class="check-icon">${comp.icon}</span>
+		                <span>${comp.label}</span>
+		            </div>
+		            <div class="check-status">
+		                <button class="status-btn" onclick="setComponentStatus('${comp.id}', true)">✓</button>
+		                <button class="status-btn" onclick="setComponentStatus('${comp.id}', false)">✗</button>
+		            </div>
+		        `;
+		        container.appendChild(item);
+		        
+		        // Add tags container if component has tags
+		        if (comp.tags && comp.tags.length > 0) {
+		            const tagsContainer = document.createElement('div');
+		            tagsContainer.className = 'tags-container hidden';
+		            tagsContainer.id = `tags-${comp.id}`;
+		            
+		            let tagsHTML = `<div class="tags-title">Select issue(s):</div>`;
+		            comp.tags.forEach((tag, index) => {
+		                tagsHTML += `
+		                    <div class="tag-option">
+		                        <input 
+		                            type="checkbox" 
+		                            id="tag-${comp.id}-${index}" 
+		                            value="${tag}"
+		                            onchange="updateComponentTags('${comp.id}')"
+		                        >
+		                        <label for="tag-${comp.id}-${index}">${tag}</label>
+		                    </div>
+		                `;
+		            });
+		            
+		            tagsContainer.innerHTML = tagsHTML;
+		            item.appendChild(tagsContainer);
+		        }
+		    });
+		}
 
         function setComponentStatus(componentId, status) {
-            inspectionData.components[componentId] = status;
-            updateChecklistUI();
-        }
+		    inspectionData.components[componentId] = status;
+		    
+		    // Show/hide tags based on status
+		    const tagsContainer = document.getElementById(`tags-${componentId}`);
+		    if (tagsContainer) {
+		        if (status === false) {
+		            // Show tags when X is clicked
+		            tagsContainer.classList.remove('hidden');
+		        } else {
+		            // Hide tags and clear selections when ✓ is clicked
+		            tagsContainer.classList.add('hidden');
+		            // Uncheck all tag checkboxes
+		            const checkboxes = tagsContainer.querySelectorAll('input[type="checkbox"]');
+		            checkboxes.forEach(cb => cb.checked = false);
+		            // Clear tags from inspectionData
+		            if (inspectionData.componentTags) {
+		                inspectionData.componentTags[componentId] = [];
+		            }
+		        }
+		    }
+		    
+		    updateChecklistUI();
+		}
 
+		function updateComponentTags(componentId) {
+		    // Initialize componentTags if not exists
+		    if (!inspectionData.componentTags) {
+		        inspectionData.componentTags = {};
+		    }
+		    
+		    // Get all checked tags for this component
+		    const tagsContainer = document.getElementById(`tags-${componentId}`);
+		    const checkboxes = tagsContainer.querySelectorAll('input[type="checkbox"]:checked');
+		    const selectedTags = Array.from(checkboxes).map(cb => cb.value);
+		    
+		    inspectionData.componentTags[componentId] = selectedTags;
+		    
+		    console.log(`Tags for ${componentId}:`, selectedTags);
+		}
+		
         function updateChecklistUI() {
             const items = document.querySelectorAll('.check-item');
             
@@ -1334,6 +1447,7 @@
                 idMode: data.idMode,
                 photos: data.photos,
                 mirror: data.components.mirror,
+				mirrorTags: data.componentTags?.mirror ? data.componentTags.mirror.join(', ') : '', 
                 seat: data.components.seat,
                 topcase: data.components.topcase,
                 wheel: data.components.wheel,
