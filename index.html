@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.5 260228</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.6 260228</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -53,21 +53,21 @@
         }
         
         .header h1 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-			justify-content: center;
-        }
-        
-        .header p {
-            font-size: 0.875rem;
-            color: var(--text-light);
-            margin-top: 0.25rem;
-			text-align: center;
-        }
+		    font-size: 1.25rem;
+		    font-weight: 700;
+		    color: var(--primary);
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    gap: 0.5rem;
+		}
+		
+		.header p {
+		    font-size: 0.875rem;
+		    color: var(--text-light);
+		    margin-top: 0.25rem;
+		    text-align: center;
+		}
         
         .container {
             max-width: 600px;
@@ -275,12 +275,14 @@
         .check-btn.ok.selected {
             background: var(--success);
             border-color: var(--success);
+			color: var(--success);
             color: white;
         }
         
         .check-btn.issue.selected {
             background: var(--danger);
             border-color: var(--danger);
+			color: var(--danger);
             color: white;
         }
         
@@ -472,8 +474,8 @@
 		}
 		
 		.photo-content.open {
-		    max-height: 800px;
-		}
+		    max-height: 600px;
+		}	
 		
 		.photo-content-inner {
 		    padding: 0 1.25rem 1.25rem;
@@ -483,7 +485,7 @@
 <body>
     <div class="text-center py-2">
             <h1>Fleet Inspector</h1>
-            <p>Quick inspection from the street - v1.2.5 260228</p>
+            <p>Quick inspection from the street - v1.2.6 260228</p>
     </div>
 
 
@@ -570,7 +572,6 @@
             <div class="section-title">📝 Additional Notes</div>
             <textarea id="notes" placeholder="Add any additional observations..."></textarea>
         </div>
-    </div>
 
 	<!-- Vehicle Photos (collapsible) -->
 		<div class="section" id="photoSection">
@@ -596,7 +597,8 @@
 		        </div>
 		    </div>
 		</div>
-
+	</div>
+	
     <!-- Submit Button -->
     <div class="submit-section">
         <button class="btn btn-primary" id="submitBtn" onclick="submitInspection()" disabled>
@@ -821,8 +823,8 @@
                         <span class="check-icon">${comp.icon}</span>
                         <span class="check-label">${comp.label}</span>
                         <div class="check-actions">
-                            <button class="check-btn ok" onclick="setComponentStatus('${comp.id}', true, event)">✓ OK</button>
-                            <button class="check-btn issue" onclick="setComponentStatus('${comp.id}', false, event)">✗ Issue</button>
+                            <button class="check-btn ok" onclick="setComponentStatus('${comp.id}', true, event)">👍 OK</button>
+							<button class="check-btn issue" onclick="setComponentStatus('${comp.id}', false, event)">👎 Issue</button>
                         </div>
                     </div>
                     <div class="tags-area" id="tags-${comp.id}">
