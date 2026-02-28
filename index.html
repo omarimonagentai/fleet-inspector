@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.7 260228</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.8 260228</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -484,9 +484,9 @@
     </style>
 </head>
 <body>
-    <div class="text-center py-2">
+    <div class="header">
             <h1>Fleet Inspector</h1>
-            <p>Quick inspection from the street - v1.2.7 260228</p>
+            <p>Quick inspection from the street - v1.2.8 260228</p>
     </div>
 
 
@@ -622,7 +622,7 @@
         // ============================================
         
         // Google Apps Script Web App URL
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxbJj0863C6anaMkM4go-dcyTCGQWLzAWQHazmBpwh4d7LPCIfA19pu3ATOiD3FN1wx/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby7p__c9rOHggz2vPEku502isdH3zXfMCPUI0IiJhtmvzykCqUF5tQI4Rvvcft9iv4/exec';
         
         // Cities list (alphabetically sorted)
         const cities = [
@@ -1236,83 +1236,85 @@
         }
 
         async function sendToGoogleSheets(data) {
-            // Prepare data for Google Sheets
-            const formData = {
-                timestamp: data.timestamp,
-                city: data.city,
-                inspector: data.inspector,
-                inspectorEmail: data.inspectorEmail,
-                vehicleId: data.vehicleId,
-                idMode: data.idMode,
-                photos: data.photos,
-                mirror: data.components.mirror,
-                mirrorTags: (data.componentTags.mirror || []).join(', '),
-                seat: data.components.seat,
-                seatTags: (data.componentTags.seat || []).join(', '),
-                topcase: data.components.topcase,
-                topcaseTags: (data.componentTags.topcase || []).join(', '),
-                wheel: data.components.wheel,
-                wheelTags: (data.componentTags.wheel || []).join(', '),
-                handlebar: data.components.handlebar,
-                handlebarTags: (data.componentTags.handlebar || []).join(', '),
-                display: data.components.display,
-                displayTags: (data.componentTags.display || []).join(', '),
-                grips: data.components.grips,
-                gripsTags: (data.componentTags.grips || []).join(', '),
-                phoneholder: data.components.phoneholder,
-                phoneholderTags: (data.componentTags.phoneholder || []).join(', '),
-                lights: data.components.lights,
-                lightsTags: (data.componentTags.lights || []).join(', '),
-                stickers: data.components.stickers,
-                stickersTags: (data.componentTags.stickers || []).join(', '),
-                cleanliness: data.components.cleanliness,
-                cleanlinessTags: (data.componentTags.cleanliness || []).join(', '),
-                helmets: data.components.helmets,
-                helmetsTags: (data.componentTags.helmets || []).join(', '),
-                hygiene: data.components.hygiene,
-                hygieneTags: (data.componentTags.hygiene || []).join(', '),
-                notes: data.notes
-            };
-            
-            console.log('Sending inspection data:', {
-                city: formData.city,
-                inspector: formData.inspector,
-                vehicleId: formData.vehicleId,
-                photoCount: formData.photos.length
-            });
-            
-            // Save to localStorage as backup
-            const backup = { ...formData };
-            delete backup.photos; // Don't store photos in backup (too large)
-            const inspections = JSON.parse(localStorage.getItem('inspections') || '[]');
-            inspections.push(backup);
-            localStorage.setItem('inspections', JSON.stringify(inspections));
-            
-            try {
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData)
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                
-                const result = await response.json();
-                console.log('Server response:', result);
-                
-                if (result.status === 'error') {
-                    throw new Error(result.message);
-                }
-                
-            } catch (error) {
-                console.error('Fetch error:', error);
-                throw error;
-            }
-        }
+		    const formData = {
+		        timestamp: data.timestamp,
+		        city: data.city,
+		        inspector: data.inspector,
+		        inspectorEmail: data.inspectorEmail,
+		        vehicleId: data.vehicleId,
+		        idMode: data.idMode,
+		        photos: data.photos,
+		        mirror: data.components.mirror,
+		        mirrorTags: (data.componentTags.mirror || []).join(', '),
+		        seat: data.components.seat,
+		        seatTags: (data.componentTags.seat || []).join(', '),
+		        topcase: data.components.topcase,
+		        topcaseTags: (data.componentTags.topcase || []).join(', '),
+		        wheel: data.components.wheel,
+		        wheelTags: (data.componentTags.wheel || []).join(', '),
+		        handlebar: data.components.handlebar,
+		        handlebarTags: (data.componentTags.handlebar || []).join(', '),
+		        display: data.components.display,
+		        displayTags: (data.componentTags.display || []).join(', '),
+		        grips: data.components.grips,
+		        gripsTags: (data.componentTags.grips || []).join(', '),
+		        phoneholder: data.components.phoneholder,
+		        phoneholderTags: (data.componentTags.phoneholder || []).join(', '),
+		        lights: data.components.lights,
+		        lightsTags: (data.componentTags.lights || []).join(', '),
+		        stickers: data.components.stickers,
+		        stickersTags: (data.componentTags.stickers || []).join(', '),
+		        cleanliness: data.components.cleanliness,
+		        cleanlinessTags: (data.componentTags.cleanliness || []).join(', '),
+		        helmets: data.components.helmets,
+		        helmetsTags: (data.componentTags.helmets || []).join(', '),
+		        hygiene: data.components.hygiene,
+		        hygieneTags: (data.componentTags.hygiene || []).join(', '),
+		        notes: data.notes
+		    };
+		
+		    // Save to localStorage as backup
+		    const backup = { ...formData };
+		    delete backup.photos;
+		    const inspections = JSON.parse(localStorage.getItem('inspections') || '[]');
+		    inspections.push(backup);
+		    localStorage.setItem('inspections', JSON.stringify(inspections));
+		
+		    try {
+		        console.log('Sending to:', SCRIPT_URL);
+		        console.log('Payload size:', JSON.stringify(formData).length, 'bytes');
+		        console.log('Photos:', formData.photos.length);
+		
+		        const response = await fetch(SCRIPT_URL, {
+		            method: 'POST',
+		            body: JSON.stringify(formData),
+		            redirect: 'follow'
+		        });
+		
+		        console.log('Response status:', response.status);
+		        console.log('Response URL:', response.url);
+		
+		        const text = await response.text();
+		        console.log('Response body:', text);
+		
+		        let result;
+		        try {
+		            result = JSON.parse(text);
+		        } catch (parseErr) {
+		            throw new Error('Server returned non-JSON: ' + text.substring(0, 200));
+		        }
+		
+		        if (result.status === 'error') {
+		            throw new Error('Server error: ' + result.message);
+		        }
+		
+		    } catch (error) {
+		        console.error('Full error:', error);
+		        // Show the actual error to the user
+		        alert('DEBUG ERROR:\n\n' + error.message + '\n\nCheck browser console for details.');
+		        throw error;
+		    }
+		}
 
         // ============================================
         // FORM RESET
