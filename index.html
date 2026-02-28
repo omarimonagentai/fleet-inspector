@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.41 260228</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.42 260228</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -523,7 +523,7 @@
 <body>
     <div class="header">
             <h1>Fleet Inspector</h1>
-            <p>Quick inspection from the street - v1.2.41 260228</p>
+            <p>Quick inspection from the street - v1.2.42 260228</p>
     </div>
 
 	<!-- Sticky Vehicle ID Bar -->
@@ -1301,7 +1301,8 @@
             try {
 				console.log("About to send to Google Sheets");
 				alert("Sending...");
-                await sendToGoogleSheets(inspectionData);
+                //await sendToGoogleSheets(inspectionData);
+				
                 showMessage('✅ Inspection submitted successfully!', 'success');
                 
                 setTimeout(() => {
@@ -1364,23 +1365,18 @@
 		
 		    try {
 		    
-		        const controller = new AbortController();
-		        const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 min timeout
-		
 		        let response;
-		        try {
-		            response = await fetch(SCRIPT_URL, {
-		                method: 'POST',
-		                headers: {
-		                    'Content-Type': 'text/plain;charset=utf-8'
-		                },
-		                body: JSON.stringify(formData),
-		                redirect: 'follow',
-		                signal: controller.signal
-		            });
+				try {
+				    response = await fetch(SCRIPT_URL, {
+				        method: 'POST',
+				        headers: {
+				            'Content-Type': 'application/json'
+				        },
+				        body: JSON.stringify(formData)
+				    });
 		        } catch (fetchErr) {
 					
-		            clearTimeout(timeoutId);
+		            
 		            if (fetchErr.name === 'AbortError') {
 		                showMessage('❌ [ERR_TIMEOUT] Request timed out. Please try again.', 'error');
 		                throw new Error('ERR_TIMEOUT');
@@ -1389,11 +1385,7 @@
 		            throw new Error('ERR_NETWORK');
 		        }
 		
-		        clearTimeout(timeoutId);
-		
-		
-		        const text = await response.text();
-
+		       const text = await response.text();
 		
 		        let result;
 		        try {
