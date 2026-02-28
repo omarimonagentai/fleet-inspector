@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.39 260228</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.40 260228</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -523,7 +523,7 @@
 <body>
     <div class="header">
             <h1>Fleet Inspector</h1>
-            <p>Quick inspection from the street - v1.2.39 260228</p>
+            <p>Quick inspection from the street - v1.2.40 260228</p>
     </div>
 
 	<!-- Sticky Vehicle ID Bar -->
@@ -643,7 +643,7 @@
 
 		<!-- Submit Button - inside container -->
 		<div class="submit-section">
-			<button type="button" class="btn btn-primary" id="submitBtn" disabled>
+			<button type="button" class="btn btn-primary" id="submitBtn" disabled onclick="submitInspection()">
 			    📤 Submit Inspection
 			</button>
 		</div>
@@ -754,9 +754,6 @@
             
             // Build checklist (tags will be added when loaded)
             buildChecklist();
-            
-            // Start main camera
-            startCamera();
             
             // Validate form
             validateFormCompleteness();
@@ -1508,9 +1505,6 @@
 		    document.getElementById('stickyVehicleId').textContent = inspectionData.vehicleId || '';
 		    document.getElementById('stickyVehicleCity').textContent = inspectionData.city || '';
 		}
-		
-		document.getElementById('submitBtn')
-		    .addEventListener('click', submitInspection);
 		
     </script>
 </body>
