@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.18 280228</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.19 280228</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -488,7 +488,7 @@
 <body>
     <div class="header">
             <h1>Fleet Inspector</h1>
-            <p>Quick inspection from the street - v1.2.18 280228</p>
+            <p>Quick inspection from the street - v1.2.19 280228</p>
     </div>
 
 
@@ -1237,6 +1237,7 @@
             }));
             
             // Final validation
+			alert('STEP 2: city=' + inspectionData.city + ' inspector=' + inspectionData.inspector + ' vehicle=' + inspectionData.vehicleId);
             if (!inspectionData.city) {
                 showMessage('❌ Please select a city', 'error');
                 return;
