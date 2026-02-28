@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.4 260228</title>
+    <title>Fleet Inspector - Quick Vehicle Inspection v1.2.5 260228</title>
     <link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-32x32.png" sizes="32x32" />
 	<link rel="icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-192x192.png" sizes="192x192" />
 	<link rel="apple-touch-icon" href="https://cdn.cooltra.com/uploads/2020/11/cropped-favicon-cooltra-64px-2-180x180.png" />
@@ -59,12 +59,14 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+			justify-content: center;
         }
         
         .header p {
             font-size: 0.875rem;
             color: var(--text-light);
             margin-top: 0.25rem;
+			text-align: center;
         }
         
         .container {
@@ -416,12 +418,72 @@
             font-weight: 600;
             margin-bottom: 1rem;
         }
+
+		.photo-header {
+		    display: flex;
+		    align-items: center;
+		    justify-content: space-between;
+		    padding: 1rem 1.25rem;
+		    cursor: pointer;
+		    user-select: none;
+		    transition: background 0.2s;
+		}
+		
+		.photo-header:active {
+		    background: #f1f5f9;
+		}
+		
+		.photo-header-left {
+		    display: flex;
+		    align-items: center;
+		    gap: 0.5rem;
+		    font-size: 1rem;
+		    font-weight: 600;
+		}
+		
+		.photo-badge {
+		    background: var(--border);
+		    color: var(--text-light);
+		    font-size: 0.7rem;
+		    font-weight: 600;
+		    padding: 0.15rem 0.5rem;
+		    border-radius: 10px;
+		}
+		
+		.photo-badge.has-photos {
+		    background: #dbeafe;
+		    color: var(--primary);
+		}
+		
+		.chevron {
+		    font-size: 1.25rem;
+		    color: var(--text-light);
+		    transition: transform 0.3s ease;
+		}
+		
+		.chevron.open {
+		    transform: rotate(180deg);
+		}
+		
+		.photo-content {
+		    max-height: 0;
+		    overflow: hidden;
+		    transition: max-height 0.3s ease;
+		}
+		
+		.photo-content.open {
+		    max-height: 800px;
+		}
+		
+		.photo-content-inner {
+		    padding: 0 1.25rem 1.25rem;
+		}
     </style>
 </head>
 <body>
     <div class="text-center py-2">
             <h1>Fleet Inspector</h1>
-            <p>Quick inspection from the street - v1.2.4 260228</p>
+            <p>Quick inspection from the street - v1.2.5 260228</p>
     </div>
 
 
@@ -493,20 +555,7 @@
             </div>
         </div>
 
-        <!-- Vehicle Photos -->
-        <div class="section">
-            <div class="section-title">📸 Vehicle Photos</div>
-            <div id="cameraSection">
-                <div class="camera-container">
-                    <video id="video" autoplay playsinline></video>
-                    <canvas id="canvas"></canvas>
-                </div>
-                <div class="camera-controls">
-                    <button class="btn btn-primary" onclick="capturePhoto()">📷 Take Photo</button>
-                </div>
-                <div class="photo-gallery" id="photoGallery"></div>
-            </div>
-        </div>
+        
 
         <!-- Component Checklist -->
         <div class="section">
@@ -522,6 +571,31 @@
             <textarea id="notes" placeholder="Add any additional observations..."></textarea>
         </div>
     </div>
+
+	<!-- Vehicle Photos (collapsible) -->
+		<div class="section" id="photoSection">
+		    <div class="photo-header" onclick="togglePhotoSection()">
+		        <div class="photo-header-left">
+		            📸 Vehicle Photos
+		            <span class="photo-badge" id="photoBadge">0 photos</span>
+		        </div>
+		        <span class="chevron" id="photoChevron">▼</span>
+		    </div>
+		    <div class="photo-content" id="photoContent">
+		        <div class="photo-content-inner">
+		            <div id="cameraSection">
+		                <div class="camera-container">
+		                    <video id="video" autoplay playsinline></video>
+		                    <canvas id="canvas"></canvas>
+		                </div>
+		                <div class="camera-controls">
+		                    <button class="btn btn-primary" onclick="capturePhoto()">📷 Take Photo</button>
+		                </div>
+		                <div class="photo-gallery" id="photoGallery"></div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
 
     <!-- Submit Button -->
     <div class="submit-section">
@@ -892,6 +966,10 @@
                 `;
                 gallery.appendChild(thumb);
             });
+			const badge = document.getElementById('photoBadge');
+			const count = inspectionData.photos.length;
+			badge.textContent = count + ' photo' + (count !== 1 ? 's' : '');
+			badge.classList.toggle('has-photos', count > 0);
         }
 
         function removePhoto(index) {
@@ -899,6 +977,13 @@
             updatePhotoGallery();
             validateFormCompleteness();
         }
+
+		function togglePhotoSection() {
+		    const chevron = document.getElementById('photoChevron');
+		    const content = document.getElementById('photoContent');
+		    chevron.classList.toggle('open');
+		    content.classList.toggle('open');
+		}
 
         // ============================================
         // VEHICLE IDENTIFICATION MODES
