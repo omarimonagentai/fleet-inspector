@@ -1233,11 +1233,11 @@
                 const data = await response.json();
                 
                 if (data.IsErroredOnProcessing) {
-                    throw new Error(data.ErrorMessage?.[0] || 'OCR processing failed');
+                    throw new Error((data.ErrorMessage && data.ErrorMessage[0]) || 'OCR processing failed');
                 }
                 
-                const extractedText = data.ParsedResults
-                    ?.map(r => r.ParsedText)
+                const extractedText = (data.ParsedResults || [])
+                    .map(function(r) { return r.ParsedText; })
                     .join('\n')
                     .trim();
                 
